@@ -25,3 +25,7 @@ def list():
     co = Sdk.docker_client.containers()
 
     return jsonify(co)
+
+@mod_container.route('/', methods=['GET'])
+def get():
+    print("TODO: GET CONTAINER BY ID")
