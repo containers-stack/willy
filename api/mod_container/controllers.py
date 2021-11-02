@@ -22,5 +22,6 @@ def list():
                                     age=(datetime.datetime.fromtimestamp(container.get('Created') / 1e3)),
                                     status=container.get('Status'))
                          )    
+    co = Sdk.docker_client.containers()
 
-    return jsonify(containers)
+    return jsonify(co)
