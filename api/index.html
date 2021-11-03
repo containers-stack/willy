@@ -14,7 +14,12 @@
                 })
                 
                 socket.on('stream_logs_response', data => {
-                document.getElementById("logs").value +=data.data;
+                    if(data.data == 'CONTAINER NOT RUNNING'){  
+                        debugger                      
+                        document.getElementById("logs").value = 'CONTAINER NOT RUNNING';  
+                        return  
+                    }
+                    document.getElementById("logs").value +=data.data;
             });
             
         });
