@@ -1,0 +1,22 @@
+<h5>Single</h5>
+<p-listbox [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" [style]="{'width':'15rem'}"></p-listbox>
+
+<h5>Advanced with Templating, Filtering and Multiple Selection</h5>
+<p-listbox [options]="countries" [(ngModel)]="selectedCountries" [metaKeySelection]="false" [checkbox]="true"
+  [filter]="true" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'250px'}" [style]="{'width':'15rem'}">
+  <ng-template let-country pTemplate="item">
+    <div class="country-item">
+      <div>{{country.name}}</div>
+    </div>
+  </ng-template>
+</p-listbox>
+
+<h5>Advanced with Group, Filtering and Multiple Selection</h5>
+<p-listbox [options]="groupedCities" [group]="true" [(ngModel)]="selectedCountries" [metaKeySelection]="false"
+  [checkbox]="true" [filter]="true" [multiple]="true" [listStyle]="{'max-height':'250px'}" [style]="{'width':'15rem'}">
+  <ng-template let-group pTemplate="group">
+    <div class="p-d-flex p-ai-center">
+      <span>{{group.label}}</span>
+    </div>
+  </ng-template>
+</p-listbox>
