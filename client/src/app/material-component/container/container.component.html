@@ -1,0 +1,31 @@
+<mat-card>
+    <mat-card-content>
+        <mat-card-title>Containers</mat-card-title>
+        <table>
+            <tr>
+                <th *ngFor="let header of this.headers; let i = index">
+                    {{this.headers[i]}}
+                </th>
+            </tr>
+            <tr *ngFor="let container of this.containers;">
+                <td>{{container.name}}</td>
+                <td>{{container.id}}</td>
+                <td>{{container.status}}</td>
+                <td>{{container.age}}</td>
+                <td>
+                    <button *ngIf="container.status != 'Running'" mat-mini-fab color="primary">
+                        <span  class="material-icons">
+                            play_arrow
+                        </span>
+                    </button>
+                    <button *ngIf="container.status == 'Running'" mat-mini-fab color="warn">
+                    <span class="material-icons">
+                        stop
+                    </span>
+                    </button>
+                </td>
+                <mat-divider></mat-divider>
+            </tr>
+        </table>
+    </mat-card-content>
+</mat-card>
