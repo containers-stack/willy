@@ -1,9 +1,12 @@
 # Logza.io
 Simple web interface for docker container
 
-## Setup
-```
-pip install -r requirements.txt
-```
+### Clone
+git clone https://github.com/moti-malka/Logza.io.git
 
-Browse: http://localhost:5000/containers/
+### Install 
+``pip install -r ./requirements.txt``
+
+### Run 
+``./env/bin/python run.py``
+

@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Flask-SocketIO-logs</title>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+        <script type="text/javascript" charset="utf-8">
+            var socket;
+            $(document).ready(function(){
+                
+                var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+                socket.on('connect', () =>{
+                    console.log("Connected!")                    
+                    document.getElementById("status").innerText ='Status: Connected';
+                })
+                
+                socket.on('stream_logs_response', data => {
+                    if(data.data == 'CONTAINER NOT RUNNING'){  
+                        debugger                      
+                        document.getElementById("logs").value = 'CONTAINER NOT RUNNING';  
+                        return  
+                    }
+                    document.getElementById("logs").value +=data.data;
+            });
+            
+        });
+            
+        function logs(){
+
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+            socket.emit('stream_logs_request', 'edc913ce90bc7a5503e109bc720989382acad3946dbc9dc88fc1b693a5b1fb13')
+        }
+        </script>
+        <style></style>
+    </head>
+    <body>
+        <h1>
+            Flask-SocketIO-Chat
+        </h1>
+        <h4  id="status" style="color: rgb(77, 114, 22)"></h4>
+        <textarea style="background-color: black; color: white; width: 100%; height: 60%;" id="logs">Click on 'Sream Logs' button</textarea><br><br>
+        <div style="text-align: center;">
+            <button style="background-color: rgb(86, 243, 151);
+                           width: 200px; height: 50px;
+                           border: none; box-shadow: 5px 8px 8px #888888;
+                           color: rgb(99, 76, 230);
+                           font-size: 25px;
+                           font-style: oblique;" onclick="logs()">Stream Logs</button>
+        </div>
+        
+    </body>
+</html>
