@@ -45,9 +45,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # generate Docker tags based on the following events/attributes
           tags: |
-            # dynamically set the branch name and sha as a custom tag
             type=raw,value={{branch}}-{{sha}}
-            # date and branch
             type=raw, value={{branch}}-${{ steps.date.outputs.date }}
 
 
