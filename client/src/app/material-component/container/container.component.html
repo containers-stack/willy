@@ -8,7 +8,7 @@
                         {{this.headers[i]}}
                     </th>
                 </tr>
-                <tr (click)="right.open()" *ngFor="let container of this.containers;">
+                <tr *ngFor="let container of this.containers;">
                     <td>{{container.name}}</td>
                     <td>{{container.id}}</td>
                     <td>{{container.status}}</td>
@@ -20,16 +20,20 @@
                         <mat-menu #menu="matMenu">
                             <!-- *ngIf="container.status != 'Running'" -->
                             <button mat-menu-item >
-                                <mat-icon style="color: #8dc25b;">play_arrow</mat-icon>
+                                <mat-icon >play_arrow</mat-icon>
                                 <span>Start</span>
                             </button>
                             <button mat-menu-item >
-                                <mat-icon style="color: #eba117;">restart_alt</mat-icon>
+                                <mat-icon>restart_alt</mat-icon>
                                 <span>Restart</span>
                             </button>
                             <!-- *ngIf="container.status != 'Running'" -->
+                            <button mat-menu-item  (click)="inspect.open()">
+                                <mat-icon>info</mat-icon>
+                                <span>Inspect</span>
+                            </button>
                             <button mat-menu-item >
-                                <mat-icon color="warn">stop</mat-icon>
+                                <mat-icon >stop</mat-icon>
                                 <span>Stop</span>
                             </button>
                         </mat-menu>
@@ -39,7 +43,7 @@
             </table>
         </mat-card-content>
     </mat-card>
-    <mat-sidenav #right position="end" style="width: 30%;">
+    <mat-sidenav #inspect position="end" style="width: 30%;">
         <div>
             <input matInput placeholder="Password" type="password">
         </div> 
