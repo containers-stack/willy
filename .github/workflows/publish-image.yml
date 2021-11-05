@@ -5,6 +5,7 @@
 # documentation.
 # Reference: https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
 # More Reference: https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md
+# And ..., More Reference: https://github.com/docker/metadata-action#typeschedule
 
 name: Create and publish a Docker image
 
@@ -45,6 +46,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # generate Docker tags based on the following events/attributes
           tags: |
+            type=ref,event=branch
             type=raw,value={{branch}}-{{sha}}
             type=raw, value={{branch}}-${{ steps.date.outputs.date }}
 
