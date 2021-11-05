@@ -34,6 +34,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%y%m%d-%H-%M-%S')"
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
@@ -44,7 +48,7 @@ jobs:
             # dynamically set the branch name and sha as a custom tag
             type=raw,value={{branch}}-{{sha}}
             # date and branch
-            type=raw, value={{branch}}-{{date 'YYYYMMDD'}}
+            type=raw, value={{branch}}-${{ steps.date.outputs.date }}
 
 
       - name: Build and push Docker image
