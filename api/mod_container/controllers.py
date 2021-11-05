@@ -52,3 +52,5 @@ def get_container():
                           name=container_instance.get('Names')[0],
                           age=(container_instance.get('Created')),
                           status=container_instance.get('Status'))
+
+    return ContainerEncoder().encode(container)
