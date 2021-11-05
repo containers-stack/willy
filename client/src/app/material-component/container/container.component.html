@@ -13,16 +13,25 @@
                 <td>{{container.status}}</td>
                 <td>{{container.age}}</td>
                 <td>
-                    <button *ngIf="container.status != 'Running'" mat-mini-fab color="primary">
-                        <span  class="material-icons">
-                            play_arrow
-                        </span>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
                     </button>
-                    <button *ngIf="container.status == 'Running'" mat-mini-fab color="warn">
-                    <span class="material-icons">
-                        stop
-                    </span>
-                    </button>
+                    <mat-menu #menu="matMenu">
+                        <!-- *ngIf="container.status != 'Running'" -->
+                        <button mat-menu-item >
+                            <mat-icon style="color: #00897b;">play_arrow</mat-icon>
+                            <span>Start</span>
+                        </button>
+                        <button mat-menu-item >
+                            <mat-icon color="warn">restart_alt</mat-icon>
+                            <span>Restart</span>
+                        </button>
+                        <!-- *ngIf="container.status != 'Running'" -->
+                        <button mat-menu-item >
+                            <mat-icon color="warn">stop</mat-icon>
+                            <span>Stop</span>
+                        </button>
+                    </mat-menu>
                 </td>
                 <mat-divider></mat-divider>
             </tr>
