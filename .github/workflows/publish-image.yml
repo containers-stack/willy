@@ -3,12 +3,13 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
+# Reference: https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
 
 name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['dockerfile']
+    branches: ['*']
 
 env:
   REGISTRY: ghcr.io
@@ -43,5 +44,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ env.hash }}
           labels: ${{ steps.meta.outputs.labels }}
