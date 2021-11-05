@@ -18,6 +18,7 @@ export class ContainerComponent implements OnInit {
 
   containers: Container[] = [];
   headers = ['Name', 'Id', 'Status', 'Age', 'Action']
+  opened = false;
   constructor() { }
 
   ngOnInit(): void {
