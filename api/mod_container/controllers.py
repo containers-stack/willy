@@ -3,6 +3,8 @@
 import datetime
 from typing import Container
 from flask import Blueprint, request, abort
+from flask import json
+from flask.json import jsonify
 from marshmallow import Schema, fields
 # ---
 from api.mod_sdk.models import Sdk
@@ -52,3 +54,18 @@ def get_container():
                           name=container_instance.get('Names')[0],
                           age=(container_instance.get('Created')),
                           status=container_instance.get('Status'))
+
+
+@mod_container.route('/inspect', methods=['GET'])
+def get_container_inspect():
+    container_id = request.args.get('id')
+    
+    # Validate request parameter
+    errors = schema_instance.validate(request.args)  # <--fix here
+    if errors:
+        abort(400, str(errors))
+    # TODO add catch
+    
+    container_instance = Sdk.docker_client.containers(filters={'id': container_id})[0]
+
+    return container_instance, 200
