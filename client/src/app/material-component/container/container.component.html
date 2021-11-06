@@ -1,31 +1,56 @@
-<mat-card>
-    <mat-card-content>
-        <mat-card-title>Containers</mat-card-title>
-        <table>
-            <tr>
-                <th *ngFor="let header of this.headers; let i = index">
-                    {{this.headers[i]}}
-                </th>
-            </tr>
-            <tr *ngFor="let container of this.containers;">
-                <td>{{container.name}}</td>
-                <td>{{container.id}}</td>
-                <td>{{container.status}}</td>
-                <td>{{container.age}}</td>
-                <td>
-                    <button *ngIf="container.status != 'Running'" mat-mini-fab color="primary">
-                        <span  class="material-icons">
-                            play_arrow
-                        </span>
-                    </button>
-                    <button *ngIf="container.status == 'Running'" mat-mini-fab color="warn">
-                    <span class="material-icons">
-                        stop
-                    </span>
-                    </button>
-                </td>
+<mat-sidenav-container mode="push" autosize fullscreen>
+    <mat-card>
+        <mat-card-content>
+            <mat-card-title>Containers</mat-card-title>
+            <table>
+                <tr>
+                    <th *ngFor="let header of this.headers; let i = index">
+                        {{this.headers[i]}}
+                    </th>
+                </tr>
+                <tr *ngFor="let container of this.containers;">
+                    <td>{{container.name}}</td>
+                    <td>{{container.id.substring(0,12)}}</td>
+                    <td>{{container.status}}</td>
+                    <td>{{container.age}}</td>
+                    <td>
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <!-- *ngIf="container.status != 'Running'" -->
+                            <button mat-menu-item >
+                                <mat-icon >play_arrow</mat-icon>
+                                <span>Start</span>
+                            </button>
+                            <button mat-menu-item >
+                                <mat-icon>restart_alt</mat-icon>
+                                <span>Restart</span>
+                            </button>
+                            <!-- *ngIf="container.status != 'Running'" -->
+                            <button mat-menu-item  (click)="contsinerInfo(container.id)">
+                                <mat-icon>info</mat-icon>
+                                <span>Inspect</span>
+                            </button>
+                            <button mat-menu-item >
+                                <mat-icon >stop</mat-icon>
+                                <span>Stop</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                    <mat-divider></mat-divider>
+                </tr>
+            </table>
+        </mat-card-content>
+    </mat-card>
+    <mat-sidenav #inspect position="end" style="width: 70%;">
+        <div style="margin: 20px">
+            <h2>Container Info</h2>
+            <ul *ngFor="let item of this.containerInfo | keyvalue">
+                <li><p style="font-weight: bold;">{{item.key}}:</p>{{item.value | json}}</li>
                 <mat-divider></mat-divider>
-            </tr>
-        </table>
-    </mat-card-content>
-</mat-card>
+             </ul>
+        </div> 
+     </mat-sidenav> 
+</mat-sidenav-container>
+    
