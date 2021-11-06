@@ -32,6 +32,9 @@ import { SnackbarComponent } from './snackbar/snackbar.component';
 import { SliderComponent } from './slider/slider.component';
 import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
 import { ContainerComponent } from './container/container.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+
+
 
 @NgModule({
   imports: [
@@ -42,7 +45,8 @@ import { ContainerComponent } from './container/container.component';
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    CdkTableModule
+    CdkTableModule,
+    NgxJsonViewerModule
   ],
   providers: [],
   entryComponents: [DialogOverviewExampleDialogComponent],

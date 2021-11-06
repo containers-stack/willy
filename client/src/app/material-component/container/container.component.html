@@ -44,12 +44,12 @@
         </mat-card-content>
     </mat-card>
     <mat-sidenav #inspect position="end" style="width: 70%;">
-        <div style="margin: 20px">
+        <div style="margin: 20px;">
             <h2>Container Info</h2>
-            <ul *ngFor="let item of this.containerInfo | keyvalue">
-                <li><p style="font-weight: bold;">{{item.key}}:</p>{{item.value | json}}</li>
-                <mat-divider></mat-divider>
-             </ul>
+            <div style= "padding: 10px; font-size: 150%;">
+
+                <ngx-json-viewer [json]="this.containerInfo"></ngx-json-viewer>
+            </div>
         </div> 
      </mat-sidenav> 
 </mat-sidenav-container>
