@@ -1,4 +1,4 @@
-<mat-sidenav-container mode="push" autosize>
+<mat-sidenav-container mode="push" autosize fullscreen>
     <mat-card>
         <mat-card-content>
             <mat-card-title>Containers</mat-card-title>
@@ -10,7 +10,7 @@
                 </tr>
                 <tr *ngFor="let container of this.containers;">
                     <td>{{container.name}}</td>
-                    <td>{{container.id}}</td>
+                    <td>{{container.id.substring(0,12)}}</td>
                     <td>{{container.status}}</td>
                     <td>{{container.age}}</td>
                     <td>
@@ -28,7 +28,7 @@
                                 <span>Restart</span>
                             </button>
                             <!-- *ngIf="container.status != 'Running'" -->
-                            <button mat-menu-item  (click)="inspect.open()">
+                            <button mat-menu-item  (click)="contsinerInfo(container.id)">
                                 <mat-icon>info</mat-icon>
                                 <span>Inspect</span>
                             </button>
@@ -43,9 +43,13 @@
             </table>
         </mat-card-content>
     </mat-card>
-    <mat-sidenav #inspect position="end" style="width: 30%;">
-        <div>
-            <input matInput placeholder="Password" type="password">
+    <mat-sidenav #inspect position="end" style="width: 70%;">
+        <div style="margin: 20px">
+            <h2>Container Info</h2>
+            <ul *ngFor="let item of this.containerInfo | keyvalue">
+                <li><p style="font-weight: bold;">{{item.key}}:</p>{{item.value | json}}</li>
+                <mat-divider></mat-divider>
+             </ul>
         </div> 
      </mat-sidenav> 
 </mat-sidenav-container>

@@ -1,5 +1,7 @@
 import { I } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
+import { ContainerService } from './container.service';
 
 export interface Container {
 
@@ -17,22 +19,32 @@ export interface Container {
 export class ContainerComponent implements OnInit {
 
   containers: Container[] = [];
+
+  containerInfo!: any;
+
   headers = ['Name', 'Id', 'Status', 'Age', 'Action']
+  
   opened = false;
-  constructor() { }
+
+  @ViewChild('inspect') public sidenav: MatSidenav | undefined;
+
+  constructor(private containerSvc: ContainerService) { }
 
   ngOnInit(): void {
 
-    for (let index = 0; index < 30; index++) {
-      
-      const container: Container = {
-        id: index.toString(),
-        name: `contaner-${index}`,
-        status: 'Running',
-        age: 'Up to 5 Minutes'
-      }
-      this.containers.push(container)
-    }
+    this.containerSvc.getContainers()
+    .subscribe((response: Container[])=> {     
+      this.containers = response;
+    })
+  }
+
+
+  contsinerInfo(id: string) {
+    this.containerSvc.getContainerInfo(id)
+    .subscribe((response: Container)=> {   
+      this.containerInfo = response;      
+      this.sidenav?.open()
+    })
   }
 
 }
