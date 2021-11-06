@@ -2,10 +2,12 @@
 from flask import Flask, jsonify
 import docker
 from flask_socketio import SocketIO
+from flask_cors import CORS
 from api.mod_container.controllers import mod_container as container_module
 
 # Define the WSGI application object
-app = Flask(__name__, static_folder='./')
+app = Flask(__name__)
+CORS(app)
 
 # Configurations
 app.config.from_object('config')

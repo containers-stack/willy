@@ -2,7 +2,7 @@
 
 import datetime
 from typing import Container
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, abort
 from marshmallow import Schema, fields
 # ---
 from api.mod_sdk.models import Sdk
@@ -29,11 +29,11 @@ def list_containers():
 
     for container_instance in Sdk.docker_client.containers():
         containers.append(Container(id=container_instance.get('Id'),
-                                    name=container_instance.get('Names'),
+                                    name=container_instance.get('Names')[0],
                                     age=(container_instance.get('Created')),
                                     status=container_instance.get('Status'))
                           )
-    return ContainerEncoder().encode(containers)
+    return ContainerEncoder().encode(containers), 200
 
 
 # TODO Add comments
