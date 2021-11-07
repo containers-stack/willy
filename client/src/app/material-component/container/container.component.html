@@ -2,7 +2,11 @@
     <mat-card>
         <mat-card-content>
             <mat-card-title>Containers</mat-card-title>
-            <table>
+            <div *ngIf="this.containers.length == 0" style="text-align: center; padding-top: 5%;">
+                <h1>There are no containers</h1>
+                <img src="../../../assets/images/empty.svg" style="width:20%;">
+            </div>
+            <table *ngIf="this.containers.length > 0">
                 <tr>
                     <th *ngFor="let header of this.headers; let i = index">
                         {{this.headers[i]}}
@@ -11,30 +15,25 @@
                 <tr *ngFor="let container of this.containers;">
                     <td>{{container.name}}</td>
                     <td>{{container.id.substring(0,12)}}</td>
+                    <td>{{container.state}}</td>
                     <td>{{container.status}}</td>
-                    <td>{{container.age}}</td>
+                    <td>{{localDateTime(container.age)}}</td>
                     <td>
                         <button mat-icon-button [matMenuTriggerFor]="menu">
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <!-- *ngIf="container.status != 'Running'" -->
-                            <button mat-menu-item >
-                                <mat-icon >play_arrow</mat-icon>
-                                <span>Start</span>
-                            </button>
-                            <button mat-menu-item >
-                                <mat-icon>restart_alt</mat-icon>
+                            <button mat-menu-item (click)="restart(container.id)">
+                                <mat-icon style="color:orange;">restart_alt</mat-icon>
                                 <span>Restart</span>
                             </button>
-                            <!-- *ngIf="container.status != 'Running'" -->
-                            <button mat-menu-item  (click)="contsinerInfo(container.id)">
-                                <mat-icon>info</mat-icon>
+                            <button  mat-menu-item  (click)="contsinerInfo(container.id)">
+                                <mat-icon style="color:royalblue;">info</mat-icon>
                                 <span>Inspect</span>
                             </button>
                             <button mat-menu-item >
-                                <mat-icon >stop</mat-icon>
-                                <span>Stop</span>
+                                <mat-icon style="color:tomato;">delete</mat-icon>
+                                <span>Remove</span>
                             </button>
                         </mat-menu>
                     </td>
@@ -44,12 +43,12 @@
         </mat-card-content>
     </mat-card>
     <mat-sidenav #inspect position="end" style="width: 70%;">
-        <div style="margin: 20px">
+        <div style="margin: 20px;">
             <h2>Container Info</h2>
-            <ul *ngFor="let item of this.containerInfo | keyvalue">
-                <li><p style="font-weight: bold;">{{item.key}}:</p>{{item.value | json}}</li>
-                <mat-divider></mat-divider>
-             </ul>
+            <mat-divider></mat-divider>
+            <div style= "padding: 10px; font-size: 120%">
+                <ngx-json-viewer [json]="this.containerInfo"></ngx-json-viewer>
+            </div>
         </div> 
      </mat-sidenav> 
 </mat-sidenav-container>

@@ -4,6 +4,7 @@ import datetime
 from typing import Container
 from flask import Blueprint, request, abort
 from flask import json
+import flask
 from flask.json import jsonify
 from marshmallow import Schema, fields
 # ---
@@ -29,11 +30,12 @@ schema_instance = MySchema()
 def list_containers():
     containers = []
 
-    for container_instance in Sdk.docker_client.containers():
+    for container_instance in Sdk.docker_client.containers(all=True):
         containers.append(Container(id=container_instance.get('Id'),
                                     name=container_instance.get('Names')[0],
                                     age=(container_instance.get('Created')),
-                                    status=container_instance.get('Status'))
+                                    status=container_instance.get('Status'),
+                                    state=container_instance.get('State'))
                           )
     return ContainerEncoder().encode(containers), 200
 
@@ -48,12 +50,14 @@ def get_container():
         abort(400, str(errors))
 
     # TODO add catch
-    container_instance = Sdk.docker_client.containers(filters={'id': container_id})[0]
+    container_instance = Sdk.docker_client.containers(all=True,filters={'id': container_id})[0]
 
     container = Container(id=container_instance.get('Id'),
                           name=container_instance.get('Names')[0],
                           age=(container_instance.get('Created')),
-                          status=container_instance.get('Status'))
+                          status=container_instance.get('Status'),
+                          state=container_instance.get('State')),
+
 
 
 @mod_container.route('/inspect', methods=['GET'])
@@ -66,6 +70,27 @@ def get_container_inspect():
         abort(400, str(errors))
     # TODO add catch
     
-    container_instance = Sdk.docker_client.containers(filters={'id': container_id})[0]
+    container_instance = Sdk.docker_client.containers(all=True, filters={'id': container_id})[0]
 
     return container_instance, 200
+ 
+@mod_container.route('/restart', methods=['GET'])
+def restart_container():
+    container_id = request.args.get('id')
+    
+    # Validate request parameter
+    errors = schema_instance.validate(request.args)  # <--fix here
+    if errors:
+        abort(400, str(errors))
+    # TODO add catch
+    
+    try:
+
+       Sdk.docker_client.restart(container_id)
+       
+       return flask.jsonify(isSuccess=True, msg='Container restarted'), 200;
+
+    except Exception as e:
+
+        return str(e), 500
+    

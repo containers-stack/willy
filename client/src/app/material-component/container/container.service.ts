@@ -46,6 +46,15 @@ export class ContainerService {
   }  
 
   // HttpClient API get() method => Fetch container
+  restart(id: string): Observable<boolean> {
+    return this.http.get<boolean>(this.apiURL + '/containers/restart?id=' + id)
+    .pipe(
+      retry(1),
+      catchError(this.handleError)
+    )
+  }  
+
+  // HttpClient API get() method => Fetch container
   getContainer(id: string): Observable<Container> {
     return this.http.get<Container>(this.apiURL + '/container/' + id)
     .pipe(

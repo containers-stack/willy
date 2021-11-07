@@ -1,4 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ContainerService } from './container.service';
@@ -7,6 +6,7 @@ export interface Container {
 
   id: string;
   name: string;
+  state: string;
   status: string;
   age: string;
 }
@@ -22,7 +22,7 @@ export class ContainerComponent implements OnInit {
 
   containerInfo!: any;
 
-  headers = ['Name', 'Id', 'Status', 'Age', 'Action']
+  headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
   
   opened = false;
 
@@ -38,8 +38,7 @@ export class ContainerComponent implements OnInit {
     })
   }
 
-
-  contsinerInfo(id: string) {
+  inspect(id: string) {
     this.containerSvc.getContainerInfo(id)
     .subscribe((response: Container)=> {   
       this.containerInfo = response;      
@@ -47,4 +46,14 @@ export class ContainerComponent implements OnInit {
     })
   }
 
+  restart(id: string) {
+    this.containerSvc.restart(id)
+    .subscribe((response: any)=> {   
+      alert(response.msg)
+    })
+  }
+
+  localDateTime(dateNumber: string): string{
+    return new Date(dateNumber).toLocaleString()
+  }
 }
