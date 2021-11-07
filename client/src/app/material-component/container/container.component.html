@@ -11,6 +11,7 @@
                 <tr *ngFor="let container of this.containers;">
                     <td>{{container.name}}</td>
                     <td>{{container.id.substring(0,12)}}</td>
+                    <td>{{container.state}}</td>
                     <td>{{container.status}}</td>
                     <td>{{container.age}}</td>
                     <td>
@@ -18,22 +19,20 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <!-- *ngIf="container.status != 'Running'" -->
-                            <button mat-menu-item >
-                                <mat-icon >play_arrow</mat-icon>
+                            <button *ngIf="container.state != 'running'" mat-menu-item >
+                                <mat-icon  style="color: green;">play_arrow</mat-icon>
                                 <span>Start</span>
                             </button>
                             <button mat-menu-item >
-                                <mat-icon>restart_alt</mat-icon>
+                                <mat-icon style="color:orange;">restart_alt</mat-icon>
                                 <span>Restart</span>
                             </button>
-                            <!-- *ngIf="container.status != 'Running'" -->
-                            <button mat-menu-item  (click)="contsinerInfo(container.id)">
-                                <mat-icon>info</mat-icon>
+                            <button  mat-menu-item  (click)="contsinerInfo(container.id)">
+                                <mat-icon style="color:royalblue;">info</mat-icon>
                                 <span>Inspect</span>
                             </button>
-                            <button mat-menu-item >
-                                <mat-icon >stop</mat-icon>
+                            <button *ngIf="container.state == 'running'"mat-menu-item >
+                                <mat-icon style="color:tomato;">stop</mat-icon>
                                 <span>Stop</span>
                             </button>
                         </mat-menu>

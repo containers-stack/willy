@@ -1,4 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ContainerService } from './container.service';
@@ -7,6 +6,7 @@ export interface Container {
 
   id: string;
   name: string;
+  state: string;
   status: string;
   age: string;
 }
@@ -22,7 +22,7 @@ export class ContainerComponent implements OnInit {
 
   containerInfo!: any;
 
-  headers = ['Name', 'Id', 'Status', 'Age', 'Action']
+  headers = ['Name', 'Id', 'State', 'Status', 'Age', 'Action']
   
   opened = false;
 

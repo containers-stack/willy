@@ -33,7 +33,8 @@ def list_containers():
         containers.append(Container(id=container_instance.get('Id'),
                                     name=container_instance.get('Names')[0],
                                     age=(container_instance.get('Created')),
-                                    status=container_instance.get('Status'))
+                                    status=container_instance.get('Status'),
+                                    state=container_instance.get('State'))
                           )
     return ContainerEncoder().encode(containers), 200
 
@@ -53,7 +54,9 @@ def get_container():
     container = Container(id=container_instance.get('Id'),
                           name=container_instance.get('Names')[0],
                           age=(container_instance.get('Created')),
-                          status=container_instance.get('Status'))
+                          status=container_instance.get('Status'),
+                          state=container_instance.get('State')),
+
 
 
 @mod_container.route('/inspect', methods=['GET'])
