@@ -2,7 +2,11 @@
     <mat-card>
         <mat-card-content>
             <mat-card-title>Containers</mat-card-title>
-            <table>
+            <div *ngIf="this.containers.length == 0" style="text-align: center; padding-top: 5%;">
+                <h1>There are no containers</h1>
+                <img src="../../../assets/images/empty.svg" style="width:20%;">
+            </div>
+            <table *ngIf="this.containers.length > 0">
                 <tr>
                     <th *ngFor="let header of this.headers; let i = index">
                         {{this.headers[i]}}
@@ -13,17 +17,13 @@
                     <td>{{container.id.substring(0,12)}}</td>
                     <td>{{container.state}}</td>
                     <td>{{container.status}}</td>
-                    <td>{{container.age}}</td>
+                    <td>{{localDateTime(container.age)}}</td>
                     <td>
                         <button mat-icon-button [matMenuTriggerFor]="menu">
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button *ngIf="container.state != 'running'" mat-menu-item >
-                                <mat-icon  style="color: green;">play_arrow</mat-icon>
-                                <span>Start</span>
-                            </button>
-                            <button mat-menu-item >
+                            <button mat-menu-item (click)="restart(container.id)">
                                 <mat-icon style="color:orange;">restart_alt</mat-icon>
                                 <span>Restart</span>
                             </button>
@@ -31,9 +31,9 @@
                                 <mat-icon style="color:royalblue;">info</mat-icon>
                                 <span>Inspect</span>
                             </button>
-                            <button *ngIf="container.state == 'running'"mat-menu-item >
-                                <mat-icon style="color:tomato;">stop</mat-icon>
-                                <span>Stop</span>
+                            <button mat-menu-item >
+                                <mat-icon style="color:tomato;">delete</mat-icon>
+                                <span>Remove</span>
                             </button>
                         </mat-menu>
                     </td>
