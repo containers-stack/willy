@@ -12,8 +12,8 @@ def stream_logs_request(id):
     container_logs = Sdk.docker_client.logs(id, stream=True, timestamps=True)
     while True:
         try:
-            line = next(container_logs).decode("utf-8")
-            socketio.emit('stream_logs_response', {'data': line})
+            log = next(container_logs).decode("utf-8")
+            socketio.emit('stream_logs_response', {'log': log, 'containerid':id})
             socketio.sleep(0)
         except StopIteration:
             socketio.emit('stream_logs_response', {'data': 'CONTAINER NOT RUNNING'})

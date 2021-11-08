@@ -33,9 +33,9 @@ export class ContainerComponent implements OnInit {
 
   @ViewChild('logs') public sidenav_logs: MatSidenav | undefined;
   
-  inProgress = false
+  inProgress = false  
 
-  logs = "";
+  logContainerContext: any;
 
   private readonly notifier: NotifierService;
 
@@ -53,9 +53,10 @@ export class ContainerComponent implements OnInit {
       this.containers = response;
       this.inProgress = false;
     })
-
-    this.socket.on("stream_logs_response", (log: any)=>{
-      (<HTMLInputElement>document.getElementById('logs')).value += log.data;
+    this.socket.on("stream_logs_response", (response: any)=>{
+      if(response.containerid == this.logContainerContext){
+        (<HTMLInputElement>document.getElementById('logs')).value += response.log;
+      }
     
     })
   }
@@ -72,6 +73,7 @@ export class ContainerComponent implements OnInit {
 
   containerLogs(id: string): void{
     this.sidenav_logs?.open()
+    this.logContainerContext = id;
     this.socket.emit('stream_logs_request', id);
   }
 
