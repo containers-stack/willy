@@ -65,7 +65,7 @@ const customNotifierOptions: NotifierOptions = {
     FullComponent,
     AppHeaderComponent,
     SpinnerComponent,
-    AppSidebarComponent,
+    AppSidebarComponent
   ],
   imports: [
     BrowserModule,

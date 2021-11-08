@@ -1,9 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NotifierService } from 'angular-notifier';
 import { Socket } from 'ngx-socket-io';
-import { map } from 'rxjs/operators'
+import { BottomSheetComponent } from 'src/app/shared/component/bottom-sheet/bottom-sheet.component';
 import { ContainerService } from './container.service';
+import { interval, Subscription } from 'rxjs';
+
 
 
 export interface Container {
@@ -27,37 +30,41 @@ export class ContainerComponent implements OnInit {
   containerInfo!: any;
 
   headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
-  
+
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
   @ViewChild('logs') public sidenav_logs: MatSidenav | undefined;
-  
-  inProgress = false  
+
+  inProgress = false
 
   logContainerContext!: Container;
 
   followLogs!: boolean;
 
+  containerSub!: Subscription;
+
   private readonly notifier: NotifierService;
 
   constructor(private containerSvc: ContainerService,
-                private notifierService: NotifierService,
-                private socket: Socket) { 
-                
-                  this.notifier = notifierService;
-              }
+    private _bottomSheet: MatBottomSheet,
+    private notifierService: NotifierService,
+    private socket: Socket) {
+
+    this.notifier = notifierService;
+  }
 
   ngOnInit(): void {
-    this.inProgress = true;
-    this.containerSvc.getContainers()
-    .subscribe((response: Container[])=> {     
-      this.containers = response;
-      this.inProgress = false;
-    })
-    this.socket.on("stream_logs_response", (response: any)=>{
-      if(response.containerid == this.logContainerContext.id){
+    
+    this.getContainers()
+
+    const source = interval(60000);
+    
+    this.containerSub = source.subscribe(()=> this.getContainers());
+
+    this.socket.on("stream_logs_response", (response: any) => {
+      if (response.containerid == this.logContainerContext.id) {
         (<HTMLInputElement>document.getElementById('logs')).value += response.log;
-        if(this.followLogs){
+        if (this.followLogs) {
           var textarea = document.getElementById('logs');
           textarea!.scrollTop = textarea!.scrollHeight;
         }
@@ -65,17 +72,25 @@ export class ContainerComponent implements OnInit {
     })
   }
 
-  containerInspect(id: string): void{
+  getContainers():void{
+    this.inProgress = true;
+    this.containerSvc.getContainers()
+      .subscribe((response: Container[]) => {
+        this.containers = response;
+        this.inProgress = false;
+      })
+  }
+  containerInspect(id: string): void {
     this.inProgress = true;
     this.containerSvc.getContainerInfo(id)
-    .subscribe((response: Container)=> {   
-      this.containerInfo = response;      
-      this.inProgress = false;
-      this.sidenav_inspect?.open()
-    })
+      .subscribe((response: Container) => {
+        this.containerInfo = response;
+        this.inProgress = false;
+        this.sidenav_inspect?.open()
+      })
   }
 
-  containerLogs(container: Container): void{
+  containerLogs(container: Container): void {
     this.sidenav_logs?.open()
     this.logContainerContext = container;
     this.socket.emit('stream_logs_request', this.logContainerContext.id);
@@ -84,28 +99,33 @@ export class ContainerComponent implements OnInit {
   restart(id: string) {
     this.inProgress = true;
     this.containerSvc.restart(id)
-    .subscribe((response: any)=> {   
-      this.notifier.notify('success', response.msg)
-      this.inProgress = false;
-    })
+      .subscribe((response: any) => {
+        this.notifier.notify('success', response.msg)
+        this.inProgress = false;
+      })
   }
 
-  localDateTime(dateNumber: string): string{
+  localDateTime(dateNumber: string): string {
     return new Date(dateNumber).toLocaleString()
   }
-  
-  logsClose(){
+
+  logsClose() {
     this.sidenav_logs?.close()
   }
 
-  changeLiveLog($liveToggle: any): void{
-    if($liveToggle == true){
+  changeLiveLog($liveToggle: any): void {
+    if ($liveToggle == true) {
       this.followLogs = false
     }
-    if($liveToggle == false){
+    if ($liveToggle == false) {
       this.followLogs = true
     }
-    
+
   }
+  openBottomSheet(): void {
+    this._bottomSheet.open(BottomSheetComponent)
 
 }
+}
+
+

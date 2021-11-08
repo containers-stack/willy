@@ -16,9 +16,20 @@
                     </th>
                 </tr>
                 <tr *ngFor="let container of this.containers;">
-                    <td>{{container.name.substring(1)}}</td>
+                    <td>
+                        <button (click)="this.openBottomSheet()" mat-button color="primary">
+                            {{container.name.substring(1)}}
+                        </button>
+                    </td>
                     <td>{{container.id.substring(0,12)}}</td>
-                    <td>{{container.state}}</td>
+                    <td>
+                        <div *ngIf="container.state == 'running'" class="chip" style="background-color: rgb(123, 192, 140);">
+                            {{container.state}}
+                        </div>
+                        <div *ngIf="container.state != 'running'" class="chip" style="background-color: rgb(223, 146, 4);">
+                            {{container.state}}
+                        </div>
+                    </td>
                     <td>{{container.status}}</td>
                     <td>{{this.localDateTime(container.age)}}</td>
                     <td>
@@ -63,7 +74,7 @@
     </mat-sidenav>
     <mat-sidenav #logs position="start" style="width: 100%;">
         <mat-toolbar color="black">
-            <span>{{this.logContainerContext?.name.substring(1)}} logs</span>
+            <span  style="color: #1e88e5;">{{this.logContainerContext?.name.substring(1)}} logs</span>
             <span fxFlex></span>
             <mat-slide-toggle [(ngModel)]="this.followLogs" style="padding-right: 10px;" [checked]="this.followLogs" (change)="this.changeLiveLog($event)">
                 Live
@@ -79,6 +90,5 @@
         </mat-toolbar>
         <textarea #logs id="logs" disabled style="width: 100%; height: 85vh; background-color: black; color: white; font-size: 15px;">   
         </textarea>
-
     </mat-sidenav>
 </mat-sidenav-container>
