@@ -35,7 +35,7 @@ export class ContainerComponent implements OnInit {
   
   inProgress = false  
 
-  logContainerContext: any;
+  logContainerContext!: Container;
 
   private readonly notifier: NotifierService;
 
@@ -54,7 +54,7 @@ export class ContainerComponent implements OnInit {
       this.inProgress = false;
     })
     this.socket.on("stream_logs_response", (response: any)=>{
-      if(response.containerid == this.logContainerContext){
+      if(response.containerid == this.logContainerContext.id){
         (<HTMLInputElement>document.getElementById('logs')).value += response.log;
       }
     
@@ -71,10 +71,10 @@ export class ContainerComponent implements OnInit {
     })
   }
 
-  containerLogs(id: string): void{
+  containerLogs(container: Container): void{
     this.sidenav_logs?.open()
-    this.logContainerContext = id;
-    this.socket.emit('stream_logs_request', id);
+    this.logContainerContext = container;
+    this.socket.emit('stream_logs_request', this.logContainerContext.id);
   }
 
   restart(id: string) {
