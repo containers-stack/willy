@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { NotifierService } from 'angular-notifier';
+import { Socket } from 'ngx-socket-io';
+import { map } from 'rxjs/operators'
 import { ContainerService } from './container.service';
+
 
 export interface Container {
 
@@ -22,38 +26,70 @@ export class ContainerComponent implements OnInit {
 
   containerInfo!: any;
 
+
   headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
   
-  opened = false;
+  @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
-  @ViewChild('inspect') public sidenav: MatSidenav | undefined;
+  @ViewChild('logs') public sidenav_logs: MatSidenav | undefined;
+  
+  inProgress = false
 
-  constructor(private containerSvc: ContainerService) { }
+  logs = "";
+
+  private readonly notifier: NotifierService;
+
+  constructor(private containerSvc: ContainerService,
+                private notifierService: NotifierService,
+                private socket: Socket) { 
+                
+                  this.notifier = notifierService;
+              }
 
   ngOnInit(): void {
-
+    this.inProgress = true;
     this.containerSvc.getContainers()
     .subscribe((response: Container[])=> {     
       this.containers = response;
+      this.inProgress = false;
+    })
+
+    this.socket.on("stream_logs_response", (log: any)=>{
+      (<HTMLInputElement>document.getElementById('logs')).value += log.data;
+    
     })
   }
 
-  inspect(id: string) {
+  containerInspect(id: string): void{
+    this.inProgress = true;
     this.containerSvc.getContainerInfo(id)
     .subscribe((response: Container)=> {   
       this.containerInfo = response;      
-      this.sidenav?.open()
+      this.inProgress = false;
+      this.sidenav_inspect?.open()
     })
   }
 
+  containerLogs(id: string): void{
+    this.sidenav_logs?.open()
+    this.socket.emit('stream_logs_request', id);
+  }
+
   restart(id: string) {
+    this.inProgress = true;
     this.containerSvc.restart(id)
     .subscribe((response: any)=> {   
-      alert(response.msg)
+      this.notifier.notify('success', response.msg)
+      this.inProgress = false;
     })
   }
 
   localDateTime(dateNumber: string): string{
     return new Date(dateNumber).toLocaleString()
   }
+  
+  logsClose(){
+    this.sidenav_logs?.close()
+  }
+
 }

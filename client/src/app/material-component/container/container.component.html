@@ -1,5 +1,8 @@
 <mat-sidenav-container mode="push" autosize fullscreen>
     <mat-card>
+        <div *ngIf="this.inProgress">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
         <mat-card-content>
             <mat-card-title>Containers</mat-card-title>
             <div *ngIf="this.containers.length == 0" style="text-align: center; padding-top: 5%;">
@@ -17,21 +20,25 @@
                     <td>{{container.id.substring(0,12)}}</td>
                     <td>{{container.state}}</td>
                     <td>{{container.status}}</td>
-                    <td>{{localDateTime(container.age)}}</td>
+                    <td>{{this.localDateTime(container.age)}}</td>
                     <td>
-                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <button [disabled]="this.inProgress" mat-icon-button [matMenuTriggerFor]="menu">
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item (click)="restart(container.id)">
-                                <mat-icon style="color:orange;">restart_alt</mat-icon>
-                                <span>Restart</span>
+                            <button mat-menu-item (click)="this.containerLogs(container.id)">
+                                <mat-icon style="color:rgb(16, 172, 94);">event_note</mat-icon>
+                                <span>Logs</span>
                             </button>
-                            <button  mat-menu-item  (click)="contsinerInfo(container.id)">
+                            <button mat-menu-item (click)="this.containerInspect(container.id)">
                                 <mat-icon style="color:royalblue;">info</mat-icon>
                                 <span>Inspect</span>
                             </button>
-                            <button mat-menu-item >
+                            <button mat-menu-item (click)="this.restart(container.id)">
+                                <mat-icon style="color:rgb(223, 146, 4);">restart_alt</mat-icon>
+                                <span>Restart</span>
+                            </button>
+                            <button mat-menu-item>
                                 <mat-icon style="color:tomato;">delete</mat-icon>
                                 <span>Remove</span>
                             </button>
@@ -45,11 +52,22 @@
     <mat-sidenav #inspect position="end" style="width: 70%;">
         <div style="margin: 20px;">
             <h2>Container Info</h2>
+            <div *ngIf="this.inProgress">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
             <mat-divider></mat-divider>
-            <div style= "padding: 10px; font-size: 120%">
+            <div style="padding: 10px; font-size: 120%">
                 <ngx-json-viewer [json]="this.containerInfo"></ngx-json-viewer>
             </div>
-        </div> 
-     </mat-sidenav> 
+        </div>
+    </mat-sidenav>
+    <mat-sidenav #logs position="start" style="width: 100%;">
+        <div style="width: 100%; height: 40px;background-color: #ebebeb;">
+            <button (click)="this.logsClose()" mat-button
+                style="color:rgb(245, 37, 0); float:right; font-weight: bold;">X</button>
+        </div>
+        <textarea id="logs" disabled style="width: 100%; height: 85vh; background-color: black; color: white; font-size: x-large;">   
+        </textarea>
+
+    </mat-sidenav>
 </mat-sidenav-container>
-    

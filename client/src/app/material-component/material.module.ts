@@ -33,8 +33,11 @@ import { SliderComponent } from './slider/slider.component';
 import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
 import { ContainerComponent } from './container/container.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 
+
+const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
 
 @NgModule({
   imports: [
@@ -46,7 +49,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     ReactiveFormsModule,
     FlexLayoutModule,
     CdkTableModule,
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   entryComponents: [DialogOverviewExampleDialogComponent],
