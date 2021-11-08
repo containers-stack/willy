@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NotifierService } from 'angular-notifier';
 import { Socket } from 'ngx-socket-io';
@@ -26,7 +26,6 @@ export class ContainerComponent implements OnInit {
 
   containerInfo!: any;
 
-
   headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
   
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
@@ -36,6 +35,8 @@ export class ContainerComponent implements OnInit {
   inProgress = false  
 
   logContainerContext!: Container;
+
+  followLogs!: boolean;
 
   private readonly notifier: NotifierService;
 
@@ -56,8 +57,11 @@ export class ContainerComponent implements OnInit {
     this.socket.on("stream_logs_response", (response: any)=>{
       if(response.containerid == this.logContainerContext.id){
         (<HTMLInputElement>document.getElementById('logs')).value += response.log;
+        if(this.followLogs){
+          var textarea = document.getElementById('logs');
+          textarea!.scrollTop = textarea!.scrollHeight;
+        }
       }
-    
     })
   }
 
@@ -92,6 +96,16 @@ export class ContainerComponent implements OnInit {
   
   logsClose(){
     this.sidenav_logs?.close()
+  }
+
+  changeLiveLog($liveToggle: any): void{
+    if($liveToggle == true){
+      this.followLogs = false
+    }
+    if($liveToggle == false){
+      this.followLogs = true
+    }
+    
   }
 
 }
