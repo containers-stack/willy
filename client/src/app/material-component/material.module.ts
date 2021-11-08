@@ -34,7 +34,7 @@ import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
 import { ContainerComponent } from './container/container.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-
+import { BottomSheetComponent } from '../shared/component/bottom-sheet/bottom-sheet.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
@@ -72,7 +72,8 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     SnackbarComponent,
     SliderComponent,
     SlideToggleComponent,
-    ContainerComponent
+    ContainerComponent,
+    BottomSheetComponent
   ]
 })
 export class MaterialComponentsModule {}

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NotifierService } from 'angular-notifier';
@@ -6,7 +6,6 @@ import { Socket } from 'ngx-socket-io';
 import { BottomSheetComponent } from 'src/app/shared/component/bottom-sheet/bottom-sheet.component';
 import { ContainerService } from './container.service';
 import { interval, Subscription } from 'rxjs';
-
 
 
 export interface Container {
@@ -35,11 +34,14 @@ export class ContainerComponent implements OnInit {
 
   @ViewChild('logs') public sidenav_logs: MatSidenav | undefined;
 
+  @ViewChild('textarealogs') textarealogs! :ElementRef;
+
+
   inProgress = false
 
   logContainerContext!: Container;
 
-  followLogs!: boolean;
+  followLogs: boolean = false;
 
   containerSub!: Subscription;
 
@@ -61,15 +63,20 @@ export class ContainerComponent implements OnInit {
     
     this.containerSub = source.subscribe(()=> this.getContainers());
 
-    this.socket.on("stream_logs_response", (response: any) => {
-      if (response.containerid == this.logContainerContext.id) {
-        (<HTMLInputElement>document.getElementById('logs')).value += response.log;
-        if (this.followLogs) {
-          var textarea = document.getElementById('logs');
-          textarea!.scrollTop = textarea!.scrollHeight;
-        }
+    this.socket.fromEvent('stream_logs_response')
+    .subscribe((response: any)=> {
+      if (response.containerid == this.logContainerContext.id){
+          this.textarealogs.nativeElement.value += response.log;    
+          if(this.followLogs){
+            this.textarealogs.nativeElement.scrollTop = this.textarealogs.nativeElement.scrollHeight
+          }
       }
     })
+    // this.socket.on("stream_stats_response", (response: any) => {
+    //   if (response.containerid == this.logContainerContext.id) {
+    //     alert(response.stats)
+    //   }
+    // })
   }
 
   getContainers():void{
@@ -87,13 +94,15 @@ export class ContainerComponent implements OnInit {
         this.containerInfo = response;
         this.inProgress = false;
         this.sidenav_inspect?.open()
+        // this.socket.emit('stream_stats_request', id);
+        return this.containerInfo;
       })
   }
 
   containerLogs(container: Container): void {
-    this.sidenav_logs?.open()
     this.logContainerContext = container;
     this.socket.emit('stream_logs_request', this.logContainerContext.id);
+    this.sidenav_logs?.open()
   }
 
   restart(id: string) {
@@ -122,9 +131,15 @@ export class ContainerComponent implements OnInit {
     }
 
   }
-  openBottomSheet(): void {
-    this._bottomSheet.open(BottomSheetComponent)
-
+  openBottomSheet(id: string): void {
+    this.containerSvc.getContainerInfo(id)
+    .subscribe((response) => {
+      this._bottomSheet.open(BottomSheetComponent, {
+        data: {
+          containerInfo: response
+        }
+      })
+    })
 }
 }
 
