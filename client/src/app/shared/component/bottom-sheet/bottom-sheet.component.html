@@ -1,0 +1,35 @@
+<div>
+  <h4 style="font-weight: bold;;">Container Details</h4>
+</div>
+<div style="border-top: solid 1px #bbb;"></div>
+<table style="margin-top: -10px;">
+  <tr>
+    <td>
+      <p>Image:<span>{{this.containerInfo.Image}}</span></p>
+    </td>
+    <td>
+      <p *ngIf="this.containerInfo.Ports.length > 0">
+        Ports:
+        <span *ngFor="let port of this.containerInfo.Ports;">
+          {{port.PublicPort}},
+        </span>
+      </p>
+      <p *ngIf="this.containerInfo.Ports.length == 0">
+        Ports:
+        <span>--</span>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <p>Mounts:<span>{{this.containerInfo.Mounts.length}}</span></p>
+    </td>
+    <td>
+      <p>Gateway:
+        <a >
+          {{this.containerInfo.NetworkSettings.Networks.bridge.Gateway}}
+        </a>
+      </p>
+    </td>
+  </tr>
+</table>
