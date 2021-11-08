@@ -9,6 +9,13 @@ git clone https://github.com/moti-malka/Logza.io.git
 
 ### Run 
 ``./env/bin/python run.py``
+
+### Run client 
+cd to ./client folder. 
+
+Run ``npm install``
+& ``npm start``
+
 Create Personal access token for GitHub [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) is how.
 Permissions: 
 ```buildoutcfg
