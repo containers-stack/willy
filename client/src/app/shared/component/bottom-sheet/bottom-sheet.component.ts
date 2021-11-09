@@ -17,7 +17,6 @@ export class BottomSheetComponent implements OnInit {
   
   ngOnInit(): void {
     if(this.data.containerInfo != null){
-      debugger
       this.containerInfo = this.data.containerInfo;
       return
     }

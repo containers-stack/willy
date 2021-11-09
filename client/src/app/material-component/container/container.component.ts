@@ -30,12 +30,9 @@ export class ContainerComponent implements OnInit {
 
   headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
 
+  sidenav_logs : boolean = false;
+
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
-
-  @ViewChild('logs') public sidenav_logs: MatSidenav | undefined;
-
-  @ViewChild('textarealogs') textarealogs! :ElementRef;
-
 
   inProgress = false
 
@@ -44,6 +41,10 @@ export class ContainerComponent implements OnInit {
   followLogs: boolean = false;
 
   containerSub!: Subscription;
+
+  public search: string = "";
+
+  public logs: string = "";
 
   private readonly notifier: NotifierService;
 
@@ -56,22 +57,21 @@ export class ContainerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     this.getContainers()
 
     const source = interval(60000);
-    
-    this.containerSub = source.subscribe(()=> this.getContainers());
 
+    this.containerSub = source.subscribe(() => this.getContainers());
     this.socket.fromEvent('stream_logs_response')
-    .subscribe((response: any)=> {
-      if (response.containerid == this.logContainerContext.id){
-          this.textarealogs.nativeElement.value += response.log;    
-          if(this.followLogs){
-            this.textarealogs.nativeElement.scrollTop = this.textarealogs.nativeElement.scrollHeight
+    .subscribe((response: any) => {
+        if (response.containerid == this.logContainerContext.id) {
+          this.logs += response.log;
+          if (this.followLogs) {
+            // this.textarealogs.nativeElement.scrollTop = this.textarealogs.nativeElement.scrollHeight
           }
-      }
-    })
+        }
+      })
     // this.socket.on("stream_stats_response", (response: any) => {
     //   if (response.containerid == this.logContainerContext.id) {
     //     alert(response.stats)
@@ -79,7 +79,7 @@ export class ContainerComponent implements OnInit {
     // })
   }
 
-  getContainers():void{
+  getContainers(): void {
     this.inProgress = true;
     this.containerSvc.getContainers()
       .subscribe((response: Container[]) => {
@@ -102,7 +102,7 @@ export class ContainerComponent implements OnInit {
   containerLogs(container: Container): void {
     this.logContainerContext = container;
     this.socket.emit('stream_logs_request', this.logContainerContext.id);
-    this.sidenav_logs?.open()
+    this.sidenav_logs = true;
   }
 
   restart(id: string) {
@@ -119,7 +119,7 @@ export class ContainerComponent implements OnInit {
   }
 
   logsClose() {
-    this.sidenav_logs?.close()
+    this.sidenav_logs = false;
   }
 
   changeLiveLog($liveToggle: any): void {
@@ -133,14 +133,19 @@ export class ContainerComponent implements OnInit {
   }
   openBottomSheet(id: string): void {
     this.containerSvc.getContainerInfo(id)
-    .subscribe((response) => {
-      this._bottomSheet.open(BottomSheetComponent, {
-        data: {
-          containerInfo: response
-        }
+      .subscribe((response) => {
+        this._bottomSheet.open(BottomSheetComponent, {
+          data: {
+            containerInfo: response
+          }
+        })
       })
-    })
-}
+  }
+
+  public OnSearched(searchText: string) {
+    this.search = searchText;
+
+  }
 }
 
 
