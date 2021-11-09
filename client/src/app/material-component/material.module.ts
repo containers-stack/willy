@@ -35,6 +35,8 @@ import { ContainerComponent } from './container/container.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { BottomSheetComponent } from '../shared/component/bottom-sheet/bottom-sheet.component';
+import { SearchTextComponent } from '../shared/component/search-text/search-text.component';
+import { HighlightSearchPipe } from '../shared/component/search-text/highlight-search.pipe';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
@@ -73,7 +75,9 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     SliderComponent,
     SlideToggleComponent,
     ContainerComponent,
-    BottomSheetComponent
+    BottomSheetComponent,
+    SearchTextComponent,
+    HighlightSearchPipe
   ]
 })
 export class MaterialComponentsModule {}
