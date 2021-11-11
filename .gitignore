@@ -133,3 +133,4 @@ dmypy.json
 .vscode/
 .idea/
 client/package-lock.json
+client/package-lock.json

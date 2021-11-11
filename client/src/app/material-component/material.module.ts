@@ -33,13 +33,10 @@ import { SliderComponent } from './slider/slider.component';
 import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
 import { ContainerComponent } from './container/container.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { BottomSheetComponent } from '../shared/component/bottom-sheet/bottom-sheet.component';
 import { SearchTextComponent } from '../shared/component/search-text/search-text.component';
 import { HighlightSearchPipe } from '../shared/component/search-text/highlight-search.pipe';
 
-
-const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
 
 @NgModule({
   imports: [
@@ -51,8 +48,7 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     ReactiveFormsModule,
     FlexLayoutModule,
     CdkTableModule,
-    NgxJsonViewerModule,
-    SocketIoModule.forRoot(config)
+    NgxJsonViewerModule
   ],
   providers: [],
   entryComponents: [DialogOverviewExampleDialogComponent],

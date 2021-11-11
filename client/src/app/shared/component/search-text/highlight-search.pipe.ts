@@ -8,7 +8,6 @@ export class HighlightSearchPipe implements PipeTransform {
     if (!args) {
       return value;
     }
-    debugger
     const regex = new RegExp(args, 'gi');
     const match = value.match(regex);
 

@@ -18,6 +18,8 @@ import { DemoMaterialModule } from './demo-material-module';
 import { SharedModule } from './shared/shared.module';
 import { SpinnerComponent } from './shared/spinner.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -59,6 +61,9 @@ const customNotifierOptions: NotifierOptions = {
       overlap: 150
   }
 };
+
+const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +80,7 @@ const customNotifierOptions: NotifierOptions = {
     FlexLayoutModule,
     HttpClientModule,
     SharedModule,
+    SocketIoModule.forRoot(config),
     NotifierModule.withConfig(
       customNotifierOptions
     ),

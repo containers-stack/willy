@@ -16,7 +16,7 @@ def stream_logs_request(id):
             socketio.emit('stream_logs_response', {'log': log, 'containerid':id})
             socketio.sleep(0)
         except StopIteration:
-            socketio.emit('stream_logs_response', {'log': 'CONTAINER NOT RUNNING','containerid':id })
+            socketio.emit('stream_logs_response', {'log': 'CONTAINER NOT RUNNING','containerid':id }, )
             break
 
 
