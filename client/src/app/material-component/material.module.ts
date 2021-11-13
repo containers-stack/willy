@@ -33,13 +33,14 @@ import { SliderComponent } from './slider/slider.component';
 import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
 import { ContainerComponent } from './container/container.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { BottomSheetComponent } from '../shared/component/bottom-sheet/bottom-sheet.component';
 import { SearchTextComponent } from '../shared/component/search-text/search-text.component';
 import { HighlightSearchPipe } from '../shared/component/search-text/highlight-search.pipe';
-
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { LogComponent } from './container/log/log.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
+
 
 @NgModule({
   imports: [
@@ -52,7 +53,7 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     FlexLayoutModule,
     CdkTableModule,
     NgxJsonViewerModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
   ],
   providers: [],
   entryComponents: [DialogOverviewExampleDialogComponent],
@@ -77,7 +78,8 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     ContainerComponent,
     BottomSheetComponent,
     SearchTextComponent,
-    HighlightSearchPipe
+    HighlightSearchPipe,
+    LogComponent
   ]
 })
 export class MaterialComponentsModule {}

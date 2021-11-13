@@ -1,0 +1,15 @@
+.sticky-div {
+    background-color: white;
+    position: sticky;
+    top: 0px;
+    padding: 1px 0px;
+}
+
+.containerLog {
+    background-color: black;
+    color: white;
+    font-size: 15px;;
+    font-family: Poppins, sans-serif;
+    padding-left: 10px;
+}
+ 

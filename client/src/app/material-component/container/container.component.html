@@ -20,7 +20,7 @@
                 </tr>
                 <tr *ngFor="let container of this.containers;">
                     <td>
-                        <button (click)="this.openBottomSheet(container.id)" mat-button color="primary">
+                        <button style="font-size: 18px;" (click)="this.openBottomSheet(container.id)" mat-button color="primary">
                             {{container.name.substring(1)}}
                         </button>
                     </td>
@@ -74,23 +74,6 @@
             <mat-divider></mat-divider>
             <div style="padding: 10px; font-size: 120%">
                 <ngx-json-viewer [json]="this.containerInfo"></ngx-json-viewer>
-            </div>
-        </div>
-    </mat-sidenav>
-    <mat-sidenav [(opened)]="sidenav_logs" position="start" style="width: 100%;">
-        <mat-toolbar color="black">
-            <span style="color: #1e88e5;">logs: {{this.logContainerContext?.name.substring(1)}}</span>
-            <span fxFlex></span>
-            <!-- <mat-slide-toggle [(ngModel)]="this.followLogs" style="padding-right: 10px;" [checked]="this.followLogs" (change)="this.changeLiveLog($event)">
-                Follow
-            </mat-slide-toggle> -->
-            <app-search-text (searched)="OnSearched($event)"></app-search-text>
-            <button mat-button (click)="this.logsClose()" mat-icon-button>
-                <mat-icon>close</mat-icon>
-            </button>
-        </mat-toolbar>
-        <div appElevation>
-            <div class="containerLog" [innerHTML]="this.logs | highlightSearch: search">
             </div>
         </div>
     </mat-sidenav>

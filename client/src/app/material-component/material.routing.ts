@@ -17,11 +17,16 @@ import { SnackbarComponent } from './snackbar/snackbar.component';
 import { SliderComponent } from './slider/slider.component';
 import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
 import { ContainerComponent } from './container/container.component';
+import { LogComponent } from './container/log/log.component';
 
 export const MaterialRoutes: Routes = [
   {
     path: 'container',
     component: ContainerComponent
+  },
+  {
+    path: 'logs',
+    component: LogComponent
   },
   {
     path: 'button',
