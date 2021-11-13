@@ -36,6 +36,10 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { BottomSheetComponent } from '../shared/component/bottom-sheet/bottom-sheet.component';
 import { SearchTextComponent } from '../shared/component/search-text/search-text.component';
 import { HighlightSearchPipe } from '../shared/component/search-text/highlight-search.pipe';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { LogComponent } from './container/log/log.component';
+
+const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
 
 
 @NgModule({
@@ -48,7 +52,8 @@ import { HighlightSearchPipe } from '../shared/component/search-text/highlight-s
     ReactiveFormsModule,
     FlexLayoutModule,
     CdkTableModule,
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
+    SocketIoModule.forRoot(config),
   ],
   providers: [],
   entryComponents: [DialogOverviewExampleDialogComponent],
@@ -73,7 +78,8 @@ import { HighlightSearchPipe } from '../shared/component/search-text/highlight-s
     ContainerComponent,
     BottomSheetComponent,
     SearchTextComponent,
-    HighlightSearchPipe
+    HighlightSearchPipe,
+    LogComponent
   ]
 })
 export class MaterialComponentsModule {}

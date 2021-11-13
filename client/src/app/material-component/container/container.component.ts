@@ -4,9 +4,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { NotifierService } from 'angular-notifier';
 import { BottomSheetComponent } from 'src/app/shared/component/bottom-sheet/bottom-sheet.component';
 import { ContainerService } from './container.service';
-import { Subscription } from 'rxjs';
-import { SocketLogService } from './container.socket.service';
-import { Socket } from 'ngx-socket-io';
+import { Router } from '@angular/router';
+
 
 
 export interface Container {
@@ -31,52 +30,26 @@ export class ContainerComponent implements OnInit {
 
   headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
 
-  sidenav_logs : boolean = false;
-
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
   inProgress = false
 
-  logContainerContext!: Container;
 
-  followLogs: boolean = false;
-
-  containerSub!: Subscription;
-
-  public search: string = "";
-
-  public logs: string[] = [];
 
   private readonly notifier: NotifierService;
 
   constructor(private _containerSvc: ContainerService,
     private _bottomSheet: MatBottomSheet,
     private notifierService: NotifierService,
-    private _socket: Socket,
-    private _socketLogService: SocketLogService) {
+    private _router: Router) {
 
     this.notifier = notifierService;
   }
 
   ngOnInit(): void {
 
-    this.getContainers()
+    this.getContainers();
 
-    this._socket.on('stream_logs_response', (log: any) =>{
-      alert(log.log)
-    });
-    // const source = interval(60000);
-    // this.containerSub = source.subscribe(() => this.getContainers());
-    
-        // if (response.containerid == this.logContainerContext.id) {
-          // if (this.followLogs) {
-          //   // this.textarealogs.nativeElement.scrollTop = this.textarealogs.nativeElement.scrollHeight
-          // }
-    // this.socket.on("stream_stats_response", (response: any) => {
-    //   if (response.containerid == this.logContainerContext.id) {
-    //     alert(response.stats)
-    //   }
-    // })
   }
 
   getContainers(): void {
@@ -87,6 +60,7 @@ export class ContainerComponent implements OnInit {
         this.inProgress = false;
       })
   }
+
   containerInspect(id: string): void {
     this.inProgress = true;
     this._containerSvc.getContainerInfo(id)
@@ -94,15 +68,13 @@ export class ContainerComponent implements OnInit {
         this.containerInfo = response;
         this.inProgress = false;
         this.sidenav_inspect?.open()
-        // this.socket.emit('stream_stats_request', id);
         return this.containerInfo;
       })
   }
 
   containerLogs(container: Container): void {
-    this.logContainerContext = container;
-    this.sidenav_logs = true;
-    this._socketLogService.LogsRequest(container.id);
+
+    this._router.navigateByUrl(`/logs?id=${container.id}`)
   }
 
   restart(id: string) {
@@ -117,21 +89,6 @@ export class ContainerComponent implements OnInit {
   localDateTime(dateNumber: string): string {
     return new Date(dateNumber).toLocaleString()
   }
-
-  logsClose() {
-    this.sidenav_logs = false;
-    this.logClear();
-  }
-
-  changeLiveLog($liveToggle: any): void {
-    if ($liveToggle == true) {
-      this.followLogs = false
-    }
-    if ($liveToggle == false) {
-      this.followLogs = true
-    }
-
-  }
   openBottomSheet(id: string): void {
     this._containerSvc.getContainerInfo(id)
       .subscribe((response) => {
@@ -141,14 +98,6 @@ export class ContainerComponent implements OnInit {
           }
         })
       })
-  }
-
-  public OnSearched(searchText: string) {
-    this.search = searchText;
-  }
-
-  logClear(){
-    this.logs = []
   }
 }
 
