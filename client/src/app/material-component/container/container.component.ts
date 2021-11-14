@@ -74,7 +74,7 @@ export class ContainerComponent implements OnInit {
 
   containerLogs(container: Container): void {
 
-    this._router.navigateByUrl(`/logs?id=${container.id}`)
+    this._router.navigateByUrl(`/logs?id=${container.id}&name=${container.name}`)
   }
 
   restart(id: string) {

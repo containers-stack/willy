@@ -1,6 +1,19 @@
-<div class="sticky-div">
-    <h3 style="margin-left: 10px;">Container Logs</h3>
-</div>
-<div *ngFor="let log of this.logs;" class="containerLog">
-    {{log}}
+<mat-grid-list class="sticky-div" cols="2" rowHeight="16:1">
+    <mat-grid-tile>
+        <div style="position: absolute; left: 20px;">
+            <h3>{{this.containerName.substring(1)}} Logs</h3>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <div style="position: absolute; right: 5px;">
+            <button (click)='close()' mat-icon-button style="color: red;">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>
+<div class="containerLog">
+    <div *ngFor="let log of this.logs;">
+        {{log}}
+    </div>
 </div>
