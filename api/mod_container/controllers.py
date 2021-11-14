@@ -6,6 +6,7 @@ import flask
 from marshmallow import Schema, fields
 # ---
 from api.mod_container.basic_ops import *
+from api.mod_container.errors import *
 from api.mod_sdk.models import Sdk
 from api.mod_container.models import Container
 from api.mod_container.models import ContainerEncoder
@@ -56,6 +57,9 @@ def api_inspect_container():
     # container_instance = Sdk.docker_client.containers(all=True, filters={'id': container_id})[0]
     try:
         container_instance = inspect_container(container_id)
+    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
+       print("{0}".format(err))
+       return str(err), 420 
     except Exception as e:
         raise e
         return str(e), 500
@@ -74,6 +78,9 @@ def api_restart_container():
 
     try:
         restart_container(container_id)
+    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
+       print("{0}".format(err))
+       return str(err), 420 
     except Exception as e:
         raise e
         return str(e), 500
@@ -92,6 +99,9 @@ def api_stop_container():
         abort(400, str(errors))
     try:
         stop_container(container_id)
+    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
+       print("{0}".format(err))
+       return str(err), 420 
     except Exception as e:
         raise e
         return str(e), 500
@@ -110,6 +120,9 @@ def api_start_container():
         abort(400, str(errors))
     try:
         start_container(container_id)
+    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
+       print("{0}".format(err))
+       return str(err), 420 
     except Exception as e:
         raise e
         return str(e), 500
@@ -128,6 +141,9 @@ def api_remove_container():
         abort(400, str(errors))
     try:
         remove_container(container_id)
+    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
+       print("{0}".format(err))
+       return str(err), 420 
     except Exception as e:
         raise e
         return str(e), 500
