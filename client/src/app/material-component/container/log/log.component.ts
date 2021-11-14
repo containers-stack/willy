@@ -18,7 +18,7 @@ export class LogComponent implements OnInit, OnDestroy {
 
   private sessionid: string = ''
 
-  private isFollow = true;
+  public isFollow = true;
 
   @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
 
@@ -39,8 +39,10 @@ export class LogComponent implements OnInit, OnDestroy {
       if (response.containerid == this.containerId) {
         this.logs.push(response.log)
         if (this.isFollow) {
-          this.scrollToBottom();
-
+          const logWindow = document.getElementById("logConsole");
+          if(logWindow != null){
+            logWindow.scrollTop = logWindow.scrollHeight;
+          }
         }
       }
     })

@@ -1,7 +1,12 @@
-<mat-grid-list class="sticky-div" cols="2" rowHeight="16:1">
+<mat-grid-list class="sticky-div" cols="3" rowHeight="10:1">
     <mat-grid-tile>
         <div style="position: absolute; left: 20px;">
             <h3>{{this.containerName.substring(1)}} Logs</h3>
+        </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <div style="position: absolute; right: 250px;">
+            <mat-slide-toggle [(ngModel)]="this.isFollow">Follow</mat-slide-toggle>
         </div>
     </mat-grid-tile>
     <mat-grid-tile>
@@ -12,7 +17,7 @@
         </div>
     </mat-grid-tile>
 </mat-grid-list>
-<div class="containerLog">
+<div id="logConsole" class="containerLog">
     <div *ngFor="let log of this.logs;">
         {{log}}
     </div>
