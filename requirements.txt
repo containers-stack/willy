@@ -5,3 +5,4 @@ gevent-websocket
 eventlet
 docker~=5.0.3
 marshmallow~=3.14.0
+flask_swagger_ui

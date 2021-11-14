@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import { Socket } from 'ngx-socket-io';
 
@@ -13,13 +13,21 @@ export class LogComponent implements OnInit, OnDestroy {
   public logs: string[] = [];
 
   private containerId = '';
+  
+  public containerName = '';
 
-  sessionid: string = ''
+  private sessionid: string = ''
+
+  public isFollow = true;
+
+  @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
 
   constructor(private socket: Socket,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private _router: Router) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.containerId = params['id']
+      this.containerName = params['name']
       this.socket.connect();
     });
   }
@@ -28,15 +36,35 @@ export class LogComponent implements OnInit, OnDestroy {
     this.sessionid = UUID.UUID();
     this.socket.emit('join_log_request', this.containerId, this.sessionid);
     this.socket.on('stream_logs_response', (response: any) => {
-      if(response.containerid == this.containerId){
+      if (response.containerid == this.containerId) {
         this.logs.push(response.log)
+        if (this.isFollow) {
+          const logWindow = document.getElementById("logConsole");
+          if(logWindow != null){
+            logWindow.scrollTop = logWindow.scrollHeight;
+          }
+        }
       }
     })
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      console.log("scrolling")
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   ngOnDestroy(): void {
     this.socket.emit('leav_log_request', this.sessionid);
     this.socket.disconnect();
+  }
+
+  close() {
+
+    this._router.navigateByUrl(`/container`)
   }
 
 }
