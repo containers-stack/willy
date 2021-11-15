@@ -1,13 +1,24 @@
-FROM python:3.8-slim-bullseye
+FROM node:16-bullseye-slim as client
 
-WORKDIR /app
+WORKDIR /build
+COPY client/package.json .
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN npm install
 
-COPY . .
+COPY client/ .
 
-ENV PORT=3000
-EXPOSE 3000
+RUN npm build
 
-CMD ["python", "app.py"]
+# FROM python:3.8-slim-bullseye
+#
+# WORKDIR /app
+#
+# COPY requirements.txt .
+# RUN pip install -r requirements.txt
+#
+# COPY . .
+#
+# ENV PORT=3000
+# EXPOSE 3000
+#
+# CMD ["python", "app.py"]
