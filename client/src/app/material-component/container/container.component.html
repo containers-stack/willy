@@ -20,7 +20,8 @@
                 </tr>
                 <tr *ngFor="let container of this.containers;">
                     <td>
-                        <button style="font-size: 18px;" (click)="this.openBottomSheet(container.id)" mat-button color="primary">
+                        <button style="font-size: 18px;" (click)="this.openBottomSheet(container.id)" mat-button
+                            color="primary">
                             {{container.name.substring(1)}}
                         </button>
                     </td>
@@ -68,13 +69,104 @@
     <mat-sidenav #inspect position="end" style="width: 70%;">
         <div style="margin: 20px;">
             <h2>Container Info</h2>
+            <div style="text-align: center;">
+            <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" style="background-color: rgb(162, 228, 224);">
+                    <mat-button-toggle  checked='true' value="red">CPU</mat-button-toggle>
+                    <mat-button-toggle value="green">RAM</mat-button-toggle>
+                    <mat-button-toggle value="blue">NETWORKING</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+            <canvas id="myChart" width="100" height="30"></canvas>
             <div *ngIf="this.inProgress">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>
-            <mat-divider></mat-divider>
-            <div style="padding: 10px; font-size: 120%">
-                <ngx-json-viewer [json]="this.containerInfo"></ngx-json-viewer>
-            </div>
+            <mat-tab-group animationDuration="0ms" style="margin-top: 15px;" mat-align-tabs="center">
+                <mat-tab label="Classic">
+                        <div class="div-info">
+                            <b>Command:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.Command}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Created:</b>
+                            <span class="span-info">
+                                {{this.localDateTime(this.containerInfo?.Created)}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>HostConfig:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.HostConfig.NetworkMode}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Id:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.Id}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Image:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.Image}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Image Id:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.ImageID}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Labels:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.Labels.maintainer}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Names:</b>
+                            <span *ngFor="let name of this.containerInfo?.Names;" class="span-info">
+                                {{name.substring(1)}},
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Ports:</b>
+                            <span *ngFor="let port of this.containerInfo?.Ports;" class="span-info">
+                                {{port.IP}}:{{port.PublicPort}},
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>State:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.State}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="div-info">
+                            <b>Status:</b>
+                            <span class="span-info">
+                                {{this.containerInfo?.Status}}
+                            </span>
+                        </div>
+                        <mat-divider></mat-divider>
+
+                </mat-tab>
+                <mat-tab label="Json">
+                    <div style="padding: 10px; font-size: 120%">
+                        <ngx-json-viewer [json]="this.containerInfo"></ngx-json-viewer>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
         </div>
     </mat-sidenav>
 </mat-sidenav-container>

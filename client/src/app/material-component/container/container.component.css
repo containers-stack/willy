@@ -18,3 +18,14 @@ td, th {
     color: white;
 
 }
+
+.div-info{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.span-info{
+    margin-left: 10px;
+    color: #363636;
+    margin-bottom: 10px;
+}
