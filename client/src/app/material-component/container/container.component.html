@@ -1,4 +1,4 @@
-<mat-sidenav-container mode="push" autosize fullscreen>
+<mat-sidenav-container mode="push" autosize fullscreen >
     <mat-card>
         <div *ngIf="this.inProgress">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -19,6 +19,14 @@
                     </th>
                 </tr>
                 <tr *ngFor="let container of this.containers;">
+                    <td>
+                        <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.stop(container.id)">
+                            <mat-icon style="color:tomato;">stop</mat-icon>
+                        </button>
+                        <button *ngIf="container.state !== 'running'" mat-menu-item (click)="this.start(container.id)">
+                            <mat-icon style="color:rgb(58, 204, 13);">play_arrow</mat-icon>
+                        </button>
+                    </td>
                     <td>
                         <button style="font-size: 18px;" (click)="this.openBottomSheet(container.id)" mat-button
                             color="primary">
@@ -43,8 +51,8 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item (click)="this.containerLogs(container)">
-                                <mat-icon style="color:rgb(16, 172, 94);">event_note</mat-icon>
+                            <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.containerLogs(container)">
+                                <mat-icon style="color:rgb(223, 109, 44);">event_note</mat-icon>
                                 <span>Logs</span>
                             </button>
                             <button mat-menu-item (click)="this.containerInspect(container.id)">
@@ -55,9 +63,9 @@
                                 <mat-icon style="color:rgb(223, 146, 4);">restart_alt</mat-icon>
                                 <span>Restart</span>
                             </button>
-                            <button mat-menu-item>
-                                <mat-icon style="color:tomato;">delete</mat-icon>
-                                <span>Remove</span>
+                            <button mat-menu-item (click)="this.delete(container.id)">
+                                <mat-icon style="color:rgb(241, 51, 51);">delete</mat-icon>
+                                <span>Delete</span>
                             </button>
                         </mat-menu>
                     </td>
@@ -70,18 +78,22 @@
         <div style="margin: 20px;">
             <h2>Container Info</h2>
             <div style="text-align: center;">
-            <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" style="background-color: rgb(162, 228, 224);">
-                    <mat-button-toggle  checked='true' value="red">CPU</mat-button-toggle>
-                    <mat-button-toggle value="green">RAM</mat-button-toggle>
-                    <mat-button-toggle value="blue">NETWORKING</mat-button-toggle>
-                </mat-button-toggle-group>
+                <div *ngIf="this.containerInfo?.Id && this.containerInfo?.State === 'running'">
+                    <app-stats *ngIf="this.sidenav_inspect._animationState == 'open'" [containerid]="this.containerInfo?.Id"></app-stats>
+                </div>
             </div>
-            <canvas id="myChart" width="100" height="30"></canvas>
             <div *ngIf="this.inProgress">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>
-            <mat-tab-group animationDuration="0ms" style="margin-top: 15px;" mat-align-tabs="center">
+            <mat-tab-group animationDuration="0ms" style="margin-top: 5px;" mat-align-tabs="center">
                 <mat-tab label="Classic">
+                    <div class="div-info">
+                        <b>Names:</b>
+                        <span *ngFor="let name of this.containerInfo?.Names;" class="span-info">
+                            {{name.substring(1)}},
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
                         <div class="div-info">
                             <b>Command:</b>
                             <span class="span-info">
@@ -128,13 +140,6 @@
                             <b>Labels:</b>
                             <span class="span-info">
                                 {{this.containerInfo?.Labels.maintainer}}
-                            </span>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <div class="div-info">
-                            <b>Names:</b>
-                            <span *ngFor="let name of this.containerInfo?.Names;" class="span-info">
-                                {{name.substring(1)}},
                             </span>
                         </div>
                         <mat-divider></mat-divider>

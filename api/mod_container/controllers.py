@@ -27,19 +27,9 @@ schema_instance = MySchema()
 # Set the route and accepted methods
 @mod_container.route('/', methods=['GET'])
 def api_list_containers():
-    # containers = []
-    #
-    # for container_instance in Sdk.docker_client.containers(all=True):
-    #     containers.append(Container(id=container_instance.get('Id'),
-    #                                 name=container_instance.get('Names')[0],
-    #                                 age=(container_instance.get('Created')),
-    #                                 status=container_instance.get('Status'),
-    #                                 state=container_instance.get('State'))
-    #                       )
     try:
         containers = list_containers()
     except Exception as e:
-        raise e
         return str(e), 500
 
     return ContainerEncoder().encode(containers), 200
@@ -61,7 +51,6 @@ def api_inspect_container():
        print("{0}".format(err))
        return str(err), 420 
     except Exception as e:
-        raise e
         return str(e), 500
 
     return container_instance, 200
@@ -82,14 +71,13 @@ def api_restart_container():
        print("{0}".format(err))
        return str(err), 420 
     except Exception as e:
-        raise e
         return str(e), 500
 
     return flask.jsonify(isSuccess=True, msg='Container restarted'), 200
 
 
 # api_stop_container stops container by id
-@mod_container.route('/stop', methods=['GET'])
+@mod_container.route('/stop', methods=['PUT'])
 def api_stop_container():
     container_id = request.args.get('id')
 
@@ -103,14 +91,13 @@ def api_stop_container():
        print("{0}".format(err))
        return str(err), 420 
     except Exception as e:
-        raise e
         return str(e), 500
 
     return flask.jsonify(isSuccess=True, msg='Container stopped'), 200
 
 
 # api_start_container start container by id
-@mod_container.route('/start', methods=['GET'])
+@mod_container.route('/start', methods=['PUT'])
 def api_start_container():
     container_id = request.args.get('id')
 
@@ -124,14 +111,13 @@ def api_start_container():
        print("{0}".format(err))
        return str(err), 420 
     except Exception as e:
-        raise e
         return str(e), 500
 
     return flask.jsonify(isSuccess=True, msg='Container started'), 200
 
 
 # api_remove_container start container by id
-@mod_container.route('/remove', methods=['GET'])
+@mod_container.route('/remove', methods=['DELETE'])
 def api_remove_container():
     container_id = request.args.get('id')
 
@@ -145,7 +131,6 @@ def api_remove_container():
        print("{0}".format(err))
        return str(err), 420 
     except Exception as e:
-        raise e
         return str(e), 500
 
     return flask.jsonify(isSuccess=True, msg='Container removed'), 200

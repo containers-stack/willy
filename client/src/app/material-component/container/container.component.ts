@@ -5,8 +5,6 @@ import { NotifierService } from 'angular-notifier';
 import { BottomSheetComponent } from 'src/app/shared/component/bottom-sheet/bottom-sheet.component';
 import { ContainerService } from './container.service';
 import { Router } from '@angular/router';
-import Chart from 'chart.js/auto'
-import { reduce } from 'rxjs-compat/operator/reduce';
 
 export interface Container {
 
@@ -28,11 +26,13 @@ export class ContainerComponent implements OnInit {
 
   containerInfo!: any;
 
-  headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
+  headers = ['Start/Stop', 'Name', 'Id', 'State', 'Status', 'Created', 'Action']
 
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
   inProgress = false
+
+  statsOpen = false;
 
   private readonly notifier: NotifierService;
 
@@ -47,39 +47,11 @@ export class ContainerComponent implements OnInit {
   ngOnInit(): void {
 
     this.getContainers();
-    
-    const ctx = 'myChart';    
-    const myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-              label: 'CPU',
-              data: [12, 19, 3, 5, 2, 3],
-              borderColor: '#1e88e5',
-              fill: true,
-              backgroundColor:'#96c6f09e',
-              borderWidth: 2
-          }]
-      },
-      options: {
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          },
-          plugins: {
-            legend:{
-              display: false
-            }
-          }
-      }
-  });
   }
 
   getContainers(): void {
     this.inProgress = true;
-    this._containerSvc.getContainers()
+    this._containerSvc.list()
       .subscribe((response: Container[]) => {
         this.containers = response;
         this.inProgress = false;
@@ -102,9 +74,36 @@ export class ContainerComponent implements OnInit {
     this._router.navigateByUrl(`/logs?id=${container.id}&name=${container.name}`)
   }
 
-  restart(id: string) {
+  restart(id: string):void {
     this.inProgress = true;
     this._containerSvc.restart(id)
+      .subscribe((response: any) => {
+        this.notifier.notify('success', response.msg)
+        this.inProgress = false;
+      })
+  }
+
+  stop(id: string):void{
+    this.inProgress = true;
+    this._containerSvc.stop(id)
+      .subscribe((response: any) => {
+        this.notifier.notify('success', response.msg)
+        this.inProgress = false;
+      })
+  }
+  
+  start(id: string):void{
+    this.inProgress = true;
+    this._containerSvc.start(id)
+      .subscribe((response: any) => {
+        this.notifier.notify('success', response.msg)
+        this.inProgress = false;
+      })
+  }
+
+  delete(id: string):void{
+    this.inProgress = true;
+    this._containerSvc.delete(id)
       .subscribe((response: any) => {
         this.notifier.notify('success', response.msg)
         this.inProgress = false;
@@ -114,9 +113,10 @@ export class ContainerComponent implements OnInit {
   localDateTime(dateNumber: string): string {
     return new Date(dateNumber).toLocaleString()
   }
+
   openBottomSheet(id: string): void {
     this._containerSvc.getContainerInfo(id)
-      .subscribe((response) => {
+      .subscribe((response:any) => {
         this._bottomSheet.open(BottomSheetComponent, {
           data: {
             containerInfo: response
