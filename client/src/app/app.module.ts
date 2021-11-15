@@ -19,7 +19,6 @@ import { SharedModule } from './shared/shared.module';
 import { SpinnerComponent } from './shared/spinner.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 
-
 const customNotifierOptions: NotifierOptions = {
   position: {
       horizontal: {

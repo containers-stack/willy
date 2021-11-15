@@ -51,7 +51,7 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item (click)="this.containerLogs(container)">
+                            <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.containerLogs(container)">
                                 <mat-icon style="color:rgb(223, 109, 44);">event_note</mat-icon>
                                 <span>Logs</span>
                             </button>
@@ -78,17 +78,14 @@
         <div style="margin: 20px;">
             <h2>Container Info</h2>
             <div style="text-align: center;">
-            <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" style="background-color: rgb(162, 228, 224);">
-                    <mat-button-toggle  checked='true' value="red">CPU</mat-button-toggle>
-                    <mat-button-toggle value="green">RAM</mat-button-toggle>
-                    <mat-button-toggle value="blue">NETWORKING</mat-button-toggle>
-                </mat-button-toggle-group>
+                <div *ngIf="this.containerInfo?.Id">
+                    <app-stats [containerid]="this.containerInfo?.Id"></app-stats>
+                </div>
             </div>
-            <canvas id="myChart" width="100" height="30"></canvas>
             <div *ngIf="this.inProgress">
                 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>
-            <mat-tab-group animationDuration="0ms" style="margin-top: 15px;" mat-align-tabs="center">
+            <mat-tab-group animationDuration="0ms" style="margin-top: 5px;" mat-align-tabs="center">
                 <mat-tab label="Classic">
                         <div class="div-info">
                             <b>Command:</b>

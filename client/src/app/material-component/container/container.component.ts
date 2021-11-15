@@ -5,8 +5,6 @@ import { NotifierService } from 'angular-notifier';
 import { BottomSheetComponent } from 'src/app/shared/component/bottom-sheet/bottom-sheet.component';
 import { ContainerService } from './container.service';
 import { Router } from '@angular/router';
-import Chart from 'chart.js/auto'
-import { reduce } from 'rxjs-compat/operator/reduce';
 
 export interface Container {
 
@@ -47,34 +45,6 @@ export class ContainerComponent implements OnInit {
   ngOnInit(): void {
 
     this.getContainers();
-    
-    const ctx = 'myChart';    
-    const myChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-          labels: ['Start/Stop', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-              label: 'CPU',
-              data: [12, 19, 3, 5, 2, 3],
-              borderColor: '#1e88e5',
-              fill: true,
-              backgroundColor:'#96c6f09e',
-              borderWidth: 2
-          }]
-      },
-      options: {
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          },
-          plugins: {
-            legend:{
-              display: false
-            }
-          }
-      }
-  });
   }
 
   getContainers(): void {

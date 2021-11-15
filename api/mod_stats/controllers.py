@@ -22,7 +22,7 @@ def join_stats_request(containerid, sessionid):
         
             socketio.emit('stream_stats_response', {'stats': stats, 'containerid':containerid}, to=sessionid)
 
-            socketio.sleep(0)
+            socketio.sleep(2)
 
         except StopIteration:
             socketio.emit('stream_stats_response', {'stats': 'CONTAINER NOT RUNNING','containerid':containerid }, to=room)
