@@ -1,3 +1,4 @@
+from datetime import date, datetime
 from flask import Blueprint
 from api.mod_sdk.models import Sdk
 from api import socketio
@@ -10,7 +11,7 @@ mod_log = Blueprint('log', __name__, url_prefix='')
 @socketio.on('join_log_request')
 def join_log_request(containerid, sessionid):
     
-    container_logs = Sdk.docker_client.logs(containerid, stream=True, timestamps=True)
+    container_logs = Sdk.docker_client.logs(containerid, stdout=True, stderr=True, stream=True, timestamps=True)
     
     room = sessionid;
 
@@ -25,7 +26,7 @@ def join_log_request(containerid, sessionid):
             socketio.sleep(0)
 
         except StopIteration:
-            socketio.emit('stream_logs_response', {'log': 'CONTAINER NOT RUNNING','containerid':containerid }, rooms=room)
+            socketio.emit('stream_logs_response', {'log': 'CONTAINER NOT RUNNING','containerid':containerid }, to=room)
             break
 
 # Stream container log by id
