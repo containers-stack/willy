@@ -1,6 +1,11 @@
 <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" style="background-color: rgb(162, 228, 224);">
-    <mat-button-toggle  checked='true' value="red">RAM</mat-button-toggle>
-    <mat-button-toggle value="green">CPU</mat-button-toggle>
-    <mat-button-toggle value="blue">NETWORKING</mat-button-toggle>
+    <mat-button-toggle value="ram" [checked]="this.activeStats == 'ram'" (change)="onItemChange($event)">RAM</mat-button-toggle>
+    <mat-button-toggle value="cpu" [checked]="this.activeStats == 'cpu'" (change)="onItemChange($event)">CPU</mat-button-toggle>
+    <mat-button-toggle value="net" [checked]="this.activeStats == 'net'" (change)="onItemChange($event)">NETWORKING</mat-button-toggle>
 </mat-button-toggle-group>
-<canvas id="memoryChart" width="100" height="20"></canvas>
+<div [hidden]="this.activeStats !== 'ram'">
+    <canvas id="memoryChart" width="100" height="20"></canvas>
+</div>
+<div [hidden]="this.activeStats !== 'cpu'">
+    <canvas id="cpuChart" width="100" height="20"></canvas>
+</div>

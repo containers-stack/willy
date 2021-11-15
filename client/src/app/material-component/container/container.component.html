@@ -1,4 +1,4 @@
-<mat-sidenav-container mode="push" autosize fullscreen>
+<mat-sidenav-container mode="push" autosize fullscreen >
     <mat-card>
         <div *ngIf="this.inProgress">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -78,8 +78,8 @@
         <div style="margin: 20px;">
             <h2>Container Info</h2>
             <div style="text-align: center;">
-                <div *ngIf="this.containerInfo?.Id">
-                    <app-stats [containerid]="this.containerInfo?.Id"></app-stats>
+                <div *ngIf="this.containerInfo?.Id && this.containerInfo?.State === 'running'">
+                    <app-stats *ngIf="this.sidenav_inspect._animationState == 'open'" [containerid]="this.containerInfo?.Id"></app-stats>
                 </div>
             </div>
             <div *ngIf="this.inProgress">
@@ -87,6 +87,13 @@
             </div>
             <mat-tab-group animationDuration="0ms" style="margin-top: 5px;" mat-align-tabs="center">
                 <mat-tab label="Classic">
+                    <div class="div-info">
+                        <b>Names:</b>
+                        <span *ngFor="let name of this.containerInfo?.Names;" class="span-info">
+                            {{name.substring(1)}},
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
                         <div class="div-info">
                             <b>Command:</b>
                             <span class="span-info">
@@ -133,13 +140,6 @@
                             <b>Labels:</b>
                             <span class="span-info">
                                 {{this.containerInfo?.Labels.maintainer}}
-                            </span>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <div class="div-info">
-                            <b>Names:</b>
-                            <span *ngFor="let name of this.containerInfo?.Names;" class="span-info">
-                                {{name.substring(1)}},
                             </span>
                         </div>
                         <mat-divider></mat-divider>

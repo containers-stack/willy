@@ -32,6 +32,8 @@ export class ContainerComponent implements OnInit {
 
   inProgress = false
 
+  statsOpen = false;
+
   private readonly notifier: NotifierService;
 
   constructor(private _containerSvc: ContainerService,
@@ -111,6 +113,7 @@ export class ContainerComponent implements OnInit {
   localDateTime(dateNumber: string): string {
     return new Date(dateNumber).toLocaleString()
   }
+
   openBottomSheet(id: string): void {
     this._containerSvc.getContainerInfo(id)
       .subscribe((response:any) => {
