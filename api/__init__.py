@@ -39,6 +39,7 @@ def connect():
 # Register modules
 from api.mod_container.controllers import mod_container as container_module
 from api.mod_log.controllers import mod_log as mod_log
+from api.mod_stats.controllers import mod_stats as mod_stats
 # ---
 
 # Register blueprint(s)
