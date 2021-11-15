@@ -28,7 +28,7 @@ export class ContainerComponent implements OnInit {
 
   containerInfo!: any;
 
-  headers = ['Name', 'Id', 'State', 'Status', 'Created', 'Action']
+  headers = ['Start/Stop', 'Name', 'Id', 'State', 'Status', 'Created', 'Action']
 
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
@@ -52,7 +52,7 @@ export class ContainerComponent implements OnInit {
     const myChart = new Chart(ctx, {
       type: 'line',
       data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          labels: ['Start/Stop', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
           datasets: [{
               label: 'CPU',
               data: [12, 19, 3, 5, 2, 3],
@@ -79,7 +79,7 @@ export class ContainerComponent implements OnInit {
 
   getContainers(): void {
     this.inProgress = true;
-    this._containerSvc.getContainers()
+    this._containerSvc.list()
       .subscribe((response: Container[]) => {
         this.containers = response;
         this.inProgress = false;
@@ -102,9 +102,36 @@ export class ContainerComponent implements OnInit {
     this._router.navigateByUrl(`/logs?id=${container.id}&name=${container.name}`)
   }
 
-  restart(id: string) {
+  restart(id: string):void {
     this.inProgress = true;
     this._containerSvc.restart(id)
+      .subscribe((response: any) => {
+        this.notifier.notify('success', response.msg)
+        this.inProgress = false;
+      })
+  }
+
+  stop(id: string):void{
+    this.inProgress = true;
+    this._containerSvc.stop(id)
+      .subscribe((response: any) => {
+        this.notifier.notify('success', response.msg)
+        this.inProgress = false;
+      })
+  }
+  
+  start(id: string):void{
+    this.inProgress = true;
+    this._containerSvc.start(id)
+      .subscribe((response: any) => {
+        this.notifier.notify('success', response.msg)
+        this.inProgress = false;
+      })
+  }
+
+  delete(id: string):void{
+    this.inProgress = true;
+    this._containerSvc.delete(id)
       .subscribe((response: any) => {
         this.notifier.notify('success', response.msg)
         this.inProgress = false;
@@ -116,7 +143,7 @@ export class ContainerComponent implements OnInit {
   }
   openBottomSheet(id: string): void {
     this._containerSvc.getContainerInfo(id)
-      .subscribe((response) => {
+      .subscribe((response:any) => {
         this._bottomSheet.open(BottomSheetComponent, {
           data: {
             containerInfo: response

@@ -20,6 +20,14 @@
                 </tr>
                 <tr *ngFor="let container of this.containers;">
                     <td>
+                        <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.stop(container.id)">
+                            <mat-icon style="color:tomato;">stop</mat-icon>
+                        </button>
+                        <button *ngIf="container.state !== 'running'" mat-menu-item (click)="this.start(container.id)">
+                            <mat-icon style="color:rgb(58, 204, 13);">play_arrow</mat-icon>
+                        </button>
+                    </td>
+                    <td>
                         <button style="font-size: 18px;" (click)="this.openBottomSheet(container.id)" mat-button
                             color="primary">
                             {{container.name.substring(1)}}
@@ -44,7 +52,7 @@
                         </button>
                         <mat-menu #menu="matMenu">
                             <button mat-menu-item (click)="this.containerLogs(container)">
-                                <mat-icon style="color:rgb(16, 172, 94);">event_note</mat-icon>
+                                <mat-icon style="color:rgb(223, 109, 44);">event_note</mat-icon>
                                 <span>Logs</span>
                             </button>
                             <button mat-menu-item (click)="this.containerInspect(container.id)">
@@ -55,9 +63,9 @@
                                 <mat-icon style="color:rgb(223, 146, 4);">restart_alt</mat-icon>
                                 <span>Restart</span>
                             </button>
-                            <button mat-menu-item>
-                                <mat-icon style="color:tomato;">delete</mat-icon>
-                                <span>Remove</span>
+                            <button mat-menu-item (click)="this.delete(container.id)">
+                                <mat-icon style="color:rgb(241, 51, 51);">delete</mat-icon>
+                                <span>Delete</span>
                             </button>
                         </mat-menu>
                     </td>
