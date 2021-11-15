@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 import { Container } from './container.component';
 import { environment } from 'src/environments/environment';
+import { NotifierService } from 'angular-notifier';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class ContainerService {
   // Define API
   apiURL = environment.apiURL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+             private notifierService: NotifierService) { }
 
   /*===========================================
     CRUD Methods for consuming containers API
@@ -28,7 +30,7 @@ export class ContainerService {
   }  
 
   // HttpClient API get() method => Fetch container list
-  getContainers(): Observable<Container[]> {
+  list(): Observable<Container[]> {
     return this.http.get<Container[]>(this.apiURL + '/containers/')
     .pipe(
       retry(1),
@@ -54,45 +56,26 @@ export class ContainerService {
     )
   }  
 
-  // HttpClient API get() method => Fetch container
-  getContainer(id: string): Observable<Container> {
-    return this.http.get<Container>(this.apiURL + '/container/' + id)
-    .pipe(
-      retry(1),
-      catchError(this.handleError)
-    )
-  }  
-
-  // HttpClient API post() method => Start container
-  createContainer(id: string): Observable<Container> {
-    return this.http.post<Container>(this.apiURL + '/Containers' + id + '/start', JSON.stringify(id), this.httpOptions)
-    .pipe(
-      retry(1),
-      catchError(this.handleError)
-    )
-  }  
-
   // HttpClient API post() method => Stop container
-  stopContainer(id: string): Observable<Container> {
-        return this.http.post<Container>(this.apiURL + '/Containers' + id + '/start', JSON.stringify(id), this.httpOptions)
+  stop(id: string): Observable<any> {
+        return this.http.put<any>(this.apiURL + '/containers/stop?id=' + id, this.httpOptions)
         .pipe(
           retry(1),
           catchError(this.handleError)
         )
       }  
 
-  // HttpClient API put() method => Update Container
-  updateContainer(container: Container): Observable<Container> {
-    return this.http.put<Container>(this.apiURL + '/Containers/', JSON.stringify(container), this.httpOptions)
-    .pipe(
-      retry(1),
-      catchError(this.handleError)
-    )
-  }
+  start(id: string): Observable<any> {
+        return this.http.put<any>(this.apiURL + '/containers/start?id=' + id, this.httpOptions)
+        .pipe(
+          retry(1),
+          catchError(this.handleError)
+        )
+      }  
 
   // HttpClient API delete() method => Delete Container
-  deleteContainer(id: string){
-    return this.http.delete<Container>(this.apiURL + '/Containers/' + id, this.httpOptions)
+  delete(id: string){
+    return this.http.delete<any>(this.apiURL + '/containers/remove?id=' + id, this.httpOptions)
     .pipe(
       retry(1),
       catchError(this.handleError)
@@ -109,7 +92,7 @@ export class ContainerService {
        // Get server-side error
        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
      }
-     window.alert(errorMessage);
+     this.notifierService.notify('error', errorMessage);
      return throwError(errorMessage);
   }
 

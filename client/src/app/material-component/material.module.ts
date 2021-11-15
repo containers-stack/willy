@@ -38,6 +38,7 @@ import { SearchTextComponent } from '../shared/component/search-text/search-text
 import { HighlightSearchPipe } from '../shared/component/search-text/highlight-search.pipe';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { LogComponent } from './container/log/log.component';
+import { StatsComponent } from './container/stats/stats.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
 
@@ -79,7 +80,8 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     BottomSheetComponent,
     SearchTextComponent,
     HighlightSearchPipe,
-    LogComponent
+    LogComponent,
+    StatsComponent
   ]
 })
 export class MaterialComponentsModule {}
