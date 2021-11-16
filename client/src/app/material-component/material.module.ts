@@ -43,7 +43,7 @@ import { environment } from 'src/environments/environment';
 
 //const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 const config: SocketIoConfig = { url: environment.apiURL , options: {
-  transports: ['websocket']
+  transports: ['websocket' , "polling"]
 } };
 
 

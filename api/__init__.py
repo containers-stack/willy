@@ -13,7 +13,7 @@ CORS(app)
 # Configurations
 app.config.from_object('config')
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", host='0.0.0.0')
 
 # Create low-level client for the Docker Engine API.
 docker_client = docker.APIClient(base_url='unix://var/run/docker.sock')

@@ -49,7 +49,7 @@ def api_inspect_container():
         container_instance = inspect_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
        print("{0}".format(err))
-       return str(err), 420 
+       return str(err), 500 
     except Exception as e:
         return str(e), 500
 
@@ -69,7 +69,7 @@ def api_restart_container():
         restart_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
        print("{0}".format(err))
-       return str(err), 420 
+       return str(err), 500 
     except Exception as e:
         return str(e), 500
 
@@ -89,7 +89,7 @@ def api_stop_container():
         stop_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
        print("{0}".format(err))
-       return str(err), 420 
+       return str(err), 500 
     except Exception as e:
         return str(e), 500
 
@@ -109,7 +109,7 @@ def api_start_container():
         start_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
        print("{0}".format(err))
-       return str(err), 420 
+       return str(err), 500 
     except Exception as e:
         return str(e), 500
 
@@ -129,7 +129,7 @@ def api_remove_container():
         remove_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
        print("{0}".format(err))
-       return str(err), 420 
+       return str(err), 500 
     except Exception as e:
         return str(e), 500
 
