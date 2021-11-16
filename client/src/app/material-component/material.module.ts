@@ -41,8 +41,10 @@ import { LogComponent } from './container/log/log.component';
 import { StatsComponent } from './container/stats/stats.component';
 import { environment } from 'src/environments/environment';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
-// const config: SocketIoConfig = { url: environment.apiURL , options: {} };
+//const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: environment.apiURL , options: {
+  transports: ['websocket']
+} };
 
 
 @NgModule({
