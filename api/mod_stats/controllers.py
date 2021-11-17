@@ -1,38 +1,43 @@
-from flask import Blueprint
+# B"H
+
+from typing import Container
+from flask import Blueprint, request, abort
+import flask
+from marshmallow import Schema, fields
+# ---
+from api.mod_container.basic_ops import *
+from api.mod_container.errors import *
 from api.mod_sdk.models import Sdk
-from api import socketio
-from flask_socketio import join_room, leave_room, rooms
+from api.mod_container.models import Container
+from api.mod_container.models import ContainerEncoder
+
+
+# ---
+
+class RequestSchema(Schema):
+    id = fields.Str(required=True)
 
 # Define the blueprint: 'log', set its url prefix: app.url/logs
-mod_stats = Blueprint('stats', __name__, url_prefix='')
+mod_stats = Blueprint('stats', __name__, url_prefix='/stats')
+schema_instance = RequestSchema()
 
-# Stream container stats by id
-@socketio.on('join_stats_request')
-def join_stats_request(containerid, sessionid):
+
+@mod_stats.route('/', methods=['GET'])
+def api_stats_container():
     
-    container_stats = Sdk.docker_client.stats(containerid, stream=True)
-    
-    room = sessionid;
+    container_id = request.args.get('id')
 
-    join_room(room)
+    # Validate request parameter
+    errors = schema_instance.validate(request.args)
+    if errors:
+        abort(400, str(errors))
 
-    while True:
-        try:
-            stats = next(container_stats).decode("utf-8")
-        
-            socketio.emit('stream_stats_response', {'stats': stats, 'containerid':containerid}, to=sessionid)
+    try:
+        container_stats = Sdk.docker_client.stats(container_id, stream=False)
+    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
+       print("{0}".format(err))
+       return str(err), 420 
+    except Exception as e:
+        return str(e), 500
 
-            socketio.sleep(0)
-
-        except StopIteration:
-            socketio.emit('stream_stats_response', {'stats': 'CONTAINER NOT RUNNING','containerid':containerid }, to=room)
-            break
-
-
-# leave container stats
-@socketio.on('leave_stats_request')
-def leave_stats_request(sessionId):
-    
-    leave_room(sessionId)
-
-    print(f'user {sessionId} leave stats room')
+    return container_stats, 200

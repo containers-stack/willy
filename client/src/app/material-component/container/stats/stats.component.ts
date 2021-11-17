@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UUID } from 'angular2-uuid';
 import Chart from 'chart.js/auto'
-import { Socket } from 'ngx-socket-io';
+import { ContainerService } from '../container.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-stats',
@@ -10,29 +10,36 @@ import { Socket } from 'ngx-socket-io';
 })
 export class StatsComponent implements OnInit {
 
-  constructor(private socket: Socket) { }
-
-  private sessionid: string = ''
+  constructor(private _containerSvc: ContainerService) { }
 
   @Input() containerid!: string;
 
   public activeStats: string = 'ram';
 
-  public ramData: number[] = [];
+  private ctxMemory = 'memoryChart';
 
-  public ramLabels: string[] = [];
+  private ctxCpu = 'cpuChart';
+
+  private ctxNet = 'netChart';
+
+  public memoryChart: Chart | undefined;
+
+  public cpuChart: Chart | undefined;
+  
+  public netChart: Chart | undefined;
 
   ngOnInit(): void {
-    
-    const ctxMemory = 'memoryChart';
-    const ctxCpu = 'cpuChart';
+   
+    this.stats()
+    const source = interval(5000);
+    source.subscribe(() => this.stats())
 
-    const memoryChart = new Chart(ctxMemory, {
+    this.memoryChart = new Chart(this.ctxMemory, {
       type: 'line',
       data: {
-        labels: this.ramLabels,
+        labels: [''],
         datasets: [{
-          label: 'RAM',
+          label: 'MB',
           data: [0],
           borderColor: '#1e88e5',
           fill: true,
@@ -49,8 +56,6 @@ export class StatsComponent implements OnInit {
               text:'MB'
             }
           },
-          
-        
         },
         plugins: {
           legend: {
@@ -60,10 +65,10 @@ export class StatsComponent implements OnInit {
       }
     });
 
-    const cpuChart = new Chart(ctxCpu, {
+    this.cpuChart = new Chart(this.ctxCpu, {
       type: 'line',
       data: {
-        labels: this.ramLabels,
+        labels: [''],
         datasets: [{
           label: 'CPU',
           data: [0],
@@ -79,11 +84,9 @@ export class StatsComponent implements OnInit {
             beginAtZero: true,
             title:{
               display:true,
-              text:'MB'
+              text:'CPU%',
             }
-          },
-          
-        
+          },                 
         },
         plugins: {
           legend: {
@@ -93,23 +96,69 @@ export class StatsComponent implements OnInit {
       }
     });
 
-    this.sessionid = UUID.UUID();
-    this.socket.emit('join_stats_request', this.containerid, this.sessionid);
-    this.socket.on('stream_stats_response', (response: any) => {
-      if (response.containerid == this.containerid) {
-        memoryChart.data.labels?.push((Math.floor(Math.random() * 100).toString()))
-        memoryChart.data.datasets.forEach((datasets) =>{
-          datasets.data.push(JSON.parse(response.stats).memory_stats.usage / 1024 / 1024)
-        })
-        memoryChart.update();
-        
-        cpuChart.data.labels?.push(Math.floor(Math.random() * 100).toString())
-        cpuChart.data.datasets.forEach((datasets) =>{
-          datasets.data.push(JSON.parse(response.stats).cpu_stats.cpu_usage.total_usage)
-        })
-        cpuChart.update();
+    this.netChart = new Chart(this.ctxNet, {
+      type: 'line',
+      data: {
+        labels: [''],
+        datasets: [{
+          label: 'NET I/O',
+          data: [0],
+          borderColor: '#7bc08c',
+          fill: true,
+          backgroundColor: '#7bc08c96',
+          borderWidth: 2,
+        }]
+      },
+      
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title:{
+              display:true,
+              text:'MB'
+            }
+          },
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
       }
-    })
+    });
+  }
+
+  stats():void{
+
+    this._containerSvc.stats(this.containerid)
+    .subscribe((response: any)=>{      
+      if (response.id == this.containerid) {
+        this.memoryChart?.data.labels?.push('')
+        this.memoryChart?.data.datasets.forEach((datasets) =>{
+          datasets.data.push(response.memory_stats.usage / 1024 / 1024)
+        })
+
+        this.cpuChart?.data.labels?.push('')
+        this.cpuChart?.data.datasets.forEach((datasets) =>{
+          var cpu_count = response.cpu_stats.cpu_usage.percpu_usage.length;
+          var cpu_percent = 0.0
+          var cpu_delta = response.cpu_stats.cpu_usage.total_usage - response.precpu_stats.cpu_usage.total_usage
+          var system_delta = response.cpu_stats.system_cpu_usage - response.precpu_stats.system_cpu_usage
+          cpu_percent = cpu_delta / system_delta * 100.0 * cpu_count                    
+          datasets.data.push(cpu_percent)
+        })
+        
+        this.netChart?.data.labels?.push('')
+        this.netChart?.data.datasets.forEach((datasets) =>{
+          datasets.data.push(response.networks.eth0.rx_bytes / 1024 / 1024)
+        })
+
+        this.memoryChart?.update();
+        this.cpuChart?.update();
+        this.netChart?.update();
+      }
+    })    
   }
 
   onItemChange(event: any):void{
