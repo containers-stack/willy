@@ -91,7 +91,7 @@ def inspect_container(container_id):
     try:
         print("inspect_container:inspecting container: {0}".format(container_id))
         is_container_exist(container_id)
-        container = Sdk.docker_client.inspect_container(filters={'id': container_id})
+        container = Sdk.docker_client.inspect_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
         print("inspect_container:internal error:could not inspect container : {0}".format(err))
         raise err
