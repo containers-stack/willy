@@ -133,7 +133,4 @@ dmypy.json
 .idea/
 venv/
 client/package-lock.json
-<<<<<<< HEAD
-=======
 __pycache__/
->>>>>>> origin/dev
