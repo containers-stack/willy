@@ -11,9 +11,14 @@ mod_log = Blueprint('log', __name__, url_prefix='')
 @socketio.on('join_log_request')
 def join_log_request(containerid, sessionid):
     
-    container_logs = Sdk.docker_client.logs(containerid, stdout=True, stderr=True, stream=True, timestamps=True)
+    container_logs = Sdk.docker_client.logs(containerid,
+                                            stdout=True,
+                                            stderr=True,
+                                            stream=True,
+                                            timestamps=True,
+                                            follow=False)
     
-    room = sessionid;
+    room = sessionid
 
     join_room(room)
 
