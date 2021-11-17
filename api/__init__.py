@@ -4,7 +4,6 @@ import docker
 from flask import Flask, jsonify
 from flask_socketio import SocketIO
 from flask_cors import CORS
-from api.mod_container.controllers import mod_container as container_module
 
 # Define the WSGI application object
 app = Flask(__name__, static_folder='./')
@@ -44,3 +43,5 @@ from api.mod_stats.controllers import mod_stats as mod_stats
 
 # Register blueprint(s)
 app.register_blueprint(container_module)
+app.register_blueprint(mod_log)
+app.register_blueprint(mod_stats)

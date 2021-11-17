@@ -45,7 +45,6 @@
                         </div>
                     </td>
                     <td>{{container.status}}</td>
-                    <td>{{this.localDateTime(container.age)}}</td>
                     <td>
                         <button [disabled]="this.inProgress" mat-icon-button [matMenuTriggerFor]="menu">
                             <mat-icon>more_vert</mat-icon>
@@ -78,7 +77,7 @@
         <div style="margin: 20px;">
             <h2>Container Info</h2>
             <div style="text-align: center;">
-                <div *ngIf="this.containerInfo?.Id && this.containerInfo?.State === 'running'">
+                <div *ngIf="this.containerInfo?.Id && this.containerInfo?.State.Status === 'running'">
                     <app-stats *ngIf="this.sidenav_inspect._animationState == 'open'" [containerid]="this.containerInfo?.Id"></app-stats>
                 </div>
             </div>
@@ -88,16 +87,16 @@
             <mat-tab-group animationDuration="0ms" style="margin-top: 5px;" mat-align-tabs="center">
                 <mat-tab label="Classic">
                     <div class="div-info">
-                        <b>Names:</b>
-                        <span *ngFor="let name of this.containerInfo?.Names;" class="span-info">
-                            {{name.substring(1)}},
+                        <b>Name:</b>
+                        <span class="span-info">
+                            {{this.containerInfo?.Name}}
                         </span>
                     </div>
                     <mat-divider></mat-divider>
                         <div class="div-info">
                             <b>Command:</b>
-                            <span class="span-info">
-                                {{this.containerInfo?.Command}}
+                            <span *ngFor="let arg of this.containerInfo?.Args;" class="span-info">
+                                {{arg}}
                             </span>
                         </div>
                         <mat-divider></mat-divider>
@@ -123,44 +122,25 @@
                         </div>
                         <mat-divider></mat-divider>
                         <div class="div-info">
-                            <b>Image:</b>
+                            <b>Image Id:</b>
                             <span class="span-info">
                                 {{this.containerInfo?.Image}}
                             </span>
                         </div>
                         <mat-divider></mat-divider>
                         <div class="div-info">
-                            <b>Image Id:</b>
-                            <span class="span-info">
-                                {{this.containerInfo?.ImageID}}
-                            </span>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <div class="div-info">
-                            <b>Labels:</b>
-                            <span class="span-info">
-                                {{this.containerInfo?.Labels.maintainer}}
-                            </span>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <div class="div-info">
                             <b>Ports:</b>
-                            <span *ngFor="let port of this.containerInfo?.Ports;" class="span-info">
-                                {{port.IP}}:{{port.PublicPort}},
-                            </span>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <div class="div-info">
-                            <b>State:</b>
-                            <span class="span-info">
-                                {{this.containerInfo?.State}}
+                            <span *ngFor="let ports of this.containerInfo?.NetworkSettings.Ports | keyvalue;" class="span-info">
+                                <span *ngFor="let port of ports.value;" class="span-info">
+                                    {{port.HostIp}}:{{port.HostPort}}
+                                </span>
                             </span>
                         </div>
                         <mat-divider></mat-divider>
                         <div class="div-info">
                             <b>Status:</b>
                             <span class="span-info">
-                                {{this.containerInfo?.Status}}
+                                {{this.containerInfo?.State.Status}}
                             </span>
                         </div>
                         <mat-divider></mat-divider>

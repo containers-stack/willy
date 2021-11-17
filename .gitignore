@@ -133,4 +133,3 @@ dmypy.json
 .idea/
 venv/
 client/package-lock.json
-client/package-lock.json

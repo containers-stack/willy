@@ -26,7 +26,7 @@ export class ContainerComponent implements OnInit {
 
   containerInfo!: any;
 
-  headers = ['Start/Stop', 'Name', 'Id', 'State', 'Status', 'Created', 'Action']
+  headers = ['Start/Stop', 'Name', 'Id', 'State', 'Status', 'Action']
 
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
@@ -34,15 +34,10 @@ export class ContainerComponent implements OnInit {
 
   statsOpen = false;
 
-  private readonly notifier: NotifierService;
-
   constructor(private _containerSvc: ContainerService,
     private _bottomSheet: MatBottomSheet,
     private notifierService: NotifierService,
-    private _router: Router) {
-
-    this.notifier = notifierService;
-  }
+    private _router: Router) {}
 
   ngOnInit(): void {
 
@@ -60,7 +55,7 @@ export class ContainerComponent implements OnInit {
 
   containerInspect(id: string): void {
     this.inProgress = true;
-    this._containerSvc.getContainerInfo(id)
+    this._containerSvc.inspect(id)
       .subscribe((response: Container) => {
         this.containerInfo = response;
         this.inProgress = false;
@@ -78,7 +73,7 @@ export class ContainerComponent implements OnInit {
     this.inProgress = true;
     this._containerSvc.restart(id)
       .subscribe((response: any) => {
-        this.notifier.notify('success', response.msg)
+        this.notifierService.notify('success', response.msg)
         this.inProgress = false;
       })
   }
@@ -87,7 +82,7 @@ export class ContainerComponent implements OnInit {
     this.inProgress = true;
     this._containerSvc.stop(id)
       .subscribe((response: any) => {
-        this.notifier.notify('success', response.msg)
+        this.notifierService.notify('success', response.msg)
         this.inProgress = false;
       })
   }
@@ -96,7 +91,7 @@ export class ContainerComponent implements OnInit {
     this.inProgress = true;
     this._containerSvc.start(id)
       .subscribe((response: any) => {
-        this.notifier.notify('success', response.msg)
+        this.notifierService.notify('success', response.msg)
         this.inProgress = false;
       })
   }
@@ -105,7 +100,7 @@ export class ContainerComponent implements OnInit {
     this.inProgress = true;
     this._containerSvc.delete(id)
       .subscribe((response: any) => {
-        this.notifier.notify('success', response.msg)
+        this.notifierService.notify('success', response.msg)
         this.inProgress = false;
       })
   }
@@ -115,7 +110,7 @@ export class ContainerComponent implements OnInit {
   }
 
   openBottomSheet(id: string): void {
-    this._containerSvc.getContainerInfo(id)
+    this._containerSvc.inspect(id)
       .subscribe((response:any) => {
         this._bottomSheet.open(BottomSheetComponent, {
           data: {
