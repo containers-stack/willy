@@ -76,9 +76,9 @@ def api_restart_container():
     return flask.jsonify(isSuccess=True, msg='Container restarted'), 200
 
 
-# api_stop_container stops container by id
-@mod_container.route('/stop', methods=['PUT'])
-def api_stop_container():
+# api_pause_container api_pause container by id
+@mod_container.route('/pause', methods=['PUT'])
+def api_pause_container():
     container_id = request.args.get('id')
 
     # Validate request parameter
@@ -86,19 +86,19 @@ def api_stop_container():
     if errors:
         abort(400, str(errors))
     try:
-        stop_container(container_id)
+        pause_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
        print("{0}".format(err))
        return str(err), 500 
     except Exception as e:
         return str(e), 500
 
-    return flask.jsonify(isSuccess=True, msg='Container stopped'), 200
+    return flask.jsonify(isSuccess=True, msg='Container paused'), 200
 
 
-# api_start_container start container by id
-@mod_container.route('/start', methods=['PUT'])
-def api_start_container():
+# api_unpause_container unpause container by id
+@mod_container.route('/unpause', methods=['PUT'])
+def api_unpause_container():
     container_id = request.args.get('id')
 
     # Validate request parameter
@@ -106,14 +106,14 @@ def api_start_container():
     if errors:
         abort(400, str(errors))
     try:
-        start_container(container_id)
+        unpause_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
        print("{0}".format(err))
        return str(err), 500 
     except Exception as e:
         return str(e), 500
 
-    return flask.jsonify(isSuccess=True, msg='Container started'), 200
+    return flask.jsonify(isSuccess=True, msg='Container unpause'), 200
 
 
 # api_remove_container start container by id
