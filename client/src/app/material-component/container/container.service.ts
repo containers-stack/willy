@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map'
 import { Container } from './container.component';
 import { environment } from 'src/environments/environment';
 import { NotifierService } from 'angular-notifier';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -30,46 +31,77 @@ export class ContainerService {
 
   // HttpClient API get() method => Fetch container list
   list(): Observable<Container[]> {
-    return this.http.get<Container[]>(this.apiURL + '/containers/');
+    return this.http.get<Container[]>(this.apiURL + '/containers/')
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
 
   // HttpClient API get() method => Fetch container
   inspect(id: string): Observable<Container> {
-    return this.http.get<Container>(this.apiURL + '/containers/inspect?id=' + id);
+    return this.http.get<Container>(this.apiURL + '/containers/inspect?id=' + id)
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
 
   // HttpClient API get() method => Fetch container
   restart(id: string): Observable<boolean> {
-    return this.http.get<boolean>(this.apiURL + '/containers/restart?id=' + id);
+    return this.http.get<boolean>(this.apiURL + '/containers/restart?id=' + id)
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
 
   // HttpClient API post() method => Stop container
   stop(id: string): Observable<any> {
     return this.http.put<any>(this.apiURL + '/containers/stop?id=' + id, this.httpOptions)
-      .map((response: any) => {
-        debugger
-        if (response) {
-
-          return response;
-        }
-        else {
-          return null;
-        }
-      });
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
 
   start(id: string): Observable<any> {
-    return this.http.put<any>(this.apiURL + '/containers/start?id=' + id, this.httpOptions);
+    return this.http.put<any>(this.apiURL + '/containers/start?id=' + id, this.httpOptions)
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
 
   // HttpClient API delete() method => Delete Container
   delete(id: string) {
-    return this.http.delete<any>(this.apiURL + '/containers/remove?id=' + id, this.httpOptions);
+    return this.http.delete<any>(this.apiURL + '/containers/remove?id=' + id, this.httpOptions)
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
 
   // HttpClient API stats() method => get container stats
   stats(id: string) {
-    return this.http.get<any>(this.apiURL + '/stats?id=' + id);
+    return this.http.get<any>(this.apiURL + '/stats?id=' + id)
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
-  
 }
