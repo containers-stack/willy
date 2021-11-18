@@ -5,6 +5,8 @@ import { NotifierService } from 'angular-notifier';
 import { BottomSheetComponent } from 'src/app/shared/component/bottom-sheet/bottom-sheet.component';
 import { ContainerService } from './container.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs-compat';
+
 
 export interface Container {
 
@@ -28,21 +30,48 @@ export class ContainerComponent implements OnInit {
 
   headers = ['Start/Stop', 'Name', 'Id', 'State', 'Status', 'Action']
 
-  @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
+  refreshSeconds = [5,10,30,60]
 
+  public refreshInterval = 5;
+
+  
   inProgress = false
-
+  
   statsOpen = false;
+  
+  @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
   constructor(private _containerSvc: ContainerService,
     private _bottomSheet: MatBottomSheet,
     private notifierService: NotifierService,
     private _router: Router) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
 
     this.getContainers();
-  }
+
+    const refreshContainer$ = Observable.of(null)
+            .switchMap(e=>this.refreshObs()) 
+            .map(() =>{
+              this._containerSvc.list()
+              .subscribe(
+                (response) => {
+                this.containers = response;
+                },
+                (error: any) => {
+                  this.notifierService.notify('error', `Failed to list containers: ${error.message}`)  
+                })
+            })
+          .repeat();
+
+    refreshContainer$.subscribe(t => {
+              const currentTime = t;
+              console.log('refresh interval = '+this.refreshInterval);
+          });
+
+        }
+          
+  refreshObs() {return Observable.timer(this.refreshInterval * 1000)}
 
   getContainers(): void {
     this.inProgress = true;
@@ -134,6 +163,10 @@ export class ContainerComponent implements OnInit {
 
   localDateTime(dateNumber: string): string {
     return new Date(dateNumber).toLocaleString()
+  }
+
+  onrefreshSecondsChange(event: any):void{
+    this.refreshInterval = event.value;
   }
 
   openBottomSheet(id: string): void {
