@@ -18,8 +18,6 @@ import { DemoMaterialModule } from './demo-material-module';
 import { SharedModule } from './shared/shared.module';
 import { SpinnerComponent } from './shared/spinner.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
-import { ContainerService } from './material-component/container/container.service';
-import { HttpErrorInterceptor } from './shared/core/http.error.interceptor';
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -35,7 +33,7 @@ const customNotifierOptions: NotifierOptions = {
   },
   theme: 'material',
   behaviour: {
-      autoHide: 3000,
+      autoHide: 5000,
       onClick: false,
       onMouseover: 'pauseAutoHide',
       showDismissButton: true,
@@ -87,11 +85,6 @@ const customNotifierOptions: NotifierOptions = {
     {
       provide: LocationStrategy,
       useClass: PathLocationStrategy
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpErrorInterceptor,
-      multi: true
     }
   ],
   bootstrap: [AppComponent],

@@ -53,32 +53,41 @@ export class ContainerComponent implements OnInit {
         this.inProgress = false;
         },
         (error: any) => {
-          this.notifierService.notify('error', error.message)  
+          this.notifierService.notify('error', `Failed to list containers: ${error.message}`)  
           this.inProgress = false;
-      })
+        })
   }
 
   containerInspect(id: string): void {
     this.inProgress = true;
     this._containerSvc.inspect(id)
-      .subscribe((response: Container) => {
+      .subscribe(
+        (response: any) => {
         this.containerInfo = response;
         this.inProgress = false;
         this.sidenav_inspect?.open()
-        return this.containerInfo;
+        return this.containerInfo;        
+        },
+        (error: any) => {
+          this.notifierService.notify('error', `Failed to inspect container: ${error.message}`)  
+          this.inProgress = false;
       })
   }
 
   containerLogs(container: Container): void {
-
-    this._router.navigateByUrl(`/logs?id=${container.id}&name=${container.name}`)
+      this._router.navigateByUrl(`/logs?id=${container.id}&name=${container.name}`)
   }
 
   restart(id: string):void {
     this.inProgress = true;
     this._containerSvc.restart(id)
-      .subscribe((response: any) => {
+      .subscribe(
+        (response: any) => {
         this.notifierService.notify('success', response.msg)
+        this.inProgress = false;
+      },
+      (error: any) => {
+        this.notifierService.notify('error', `Failed to restart container: ${error.message}`)  
         this.inProgress = false;
       })
   }
@@ -89,14 +98,23 @@ export class ContainerComponent implements OnInit {
       .subscribe((response: any) => {
         this.notifierService.notify('success', response.msg)
         this.inProgress = false;
+      },
+      (error: any) => {
+        this.notifierService.notify('error', `Failed to stop container: ${error.message}`)  
+        this.inProgress = false;
       })
   }
   
   start(id: string):void{
     this.inProgress = true;
     this._containerSvc.start(id)
-      .subscribe((response: any) => {
+      .subscribe(
+        (response: any) => {
         this.notifierService.notify('success', response.msg)
+        this.inProgress = false;
+        },
+      (error: any) => {
+        this.notifierService.notify('error', `Failed to start container: ${error.message}`)  
         this.inProgress = false;
       })
   }
@@ -106,6 +124,10 @@ export class ContainerComponent implements OnInit {
     this._containerSvc.delete(id)
       .subscribe((response: any) => {
         this.notifierService.notify('success', response.msg)
+        this.inProgress = false;
+      },
+      (error: any) => {
+        this.notifierService.notify('error', `Failed to delete container: ${error.message}`)  
         this.inProgress = false;
       })
   }

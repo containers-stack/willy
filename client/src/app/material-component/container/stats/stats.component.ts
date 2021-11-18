@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto'
 import { ContainerService } from '../container.service';
 import { interval, Subscription } from 'rxjs';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-stats',
@@ -10,7 +11,8 @@ import { interval, Subscription } from 'rxjs';
 })
 export class StatsComponent implements OnInit {
 
-  constructor(private _containerSvc: ContainerService) { }
+  constructor(private _containerSvc: ContainerService,
+              private notifierService: NotifierService) { }
 
   @Input() containerid!: string;
 
@@ -132,7 +134,8 @@ export class StatsComponent implements OnInit {
   stats():void{
 
     this._containerSvc.stats(this.containerid)
-    .subscribe((response: any)=>{      
+    .subscribe(
+      (response: any)=>{      
       if (response.id == this.containerid) {
         this.memoryChart?.data.labels?.push('')
         this.memoryChart?.data.datasets.forEach((datasets) =>{
@@ -158,7 +161,10 @@ export class StatsComponent implements OnInit {
         this.cpuChart?.update();
         this.netChart?.update();
       }
-    })    
+    },
+      (error: any) => {
+        this.notifierService.notify('error', `Failed to get container stats: ${error.message}`)  
+      })
   }
 
   onItemChange(event: any):void{
