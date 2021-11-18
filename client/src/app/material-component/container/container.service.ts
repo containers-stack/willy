@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map'
 import { Container } from './container.component';
 import { environment } from 'src/environments/environment';
 import { NotifierService } from 'angular-notifier';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,13 @@ export class ContainerService {
 
   // HttpClient API get() method => Fetch container list
   list(): Observable<Container[]> {
-    return this.http.get<Container[]>(this.apiURL + '/containers/');
+    return this.http.get<Container[]>(this.apiURL + '/containers/')
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
   }
 
   // HttpClient API get() method => Fetch container

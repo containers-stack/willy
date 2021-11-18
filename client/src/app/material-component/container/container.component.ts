@@ -47,9 +47,14 @@ export class ContainerComponent implements OnInit {
   getContainers(): void {
     this.inProgress = true;
     this._containerSvc.list()
-      .subscribe((response: Container[]) => {
+      .subscribe(
+        (response) => {
         this.containers = response;
         this.inProgress = false;
+        },
+        (error: any) => {
+          this.notifierService.notify('error', error.message)  
+          this.inProgress = false;
       })
   }
 
