@@ -41,9 +41,8 @@ import { LogComponent } from './container/log/log.component';
 import { StatsComponent } from './container/stats/stats.component';
 import { environment } from 'src/environments/environment';
 
-//const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
-const config: SocketIoConfig = { url: environment.apiURL , options: {
-  transports: ['websocket' , "polling"]
+const socetConfig: SocketIoConfig = { url: environment.apiURL , options: {
+  transports: ["polling", 'websocket']
 } };
 
 
@@ -58,7 +57,7 @@ const config: SocketIoConfig = { url: environment.apiURL , options: {
     FlexLayoutModule,
     CdkTableModule,
     NgxJsonViewerModule,
-    SocketIoModule.forRoot(config),
+    SocketIoModule.forRoot(socetConfig),
   ],
   providers: [],
   entryComponents: [DialogOverviewExampleDialogComponent],

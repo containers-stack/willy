@@ -37,7 +37,7 @@ def root():
 # Sample HTTP error handling
 @app.errorhandler(404)
 def not_found(error):
-    return jsonify(msg="404 NOT FOUND"), 404
+    return send_from_directory('../static', 'index.html')
 
 
 @socketio.on('connect')

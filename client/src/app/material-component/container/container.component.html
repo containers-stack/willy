@@ -57,10 +57,10 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <!-- <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.containerLogs(container)">
+                            <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.containerLogs(container)">
                                 <mat-icon style="color:rgb(223, 109, 44);">event_note</mat-icon>
                                 <span>Logs</span>
-                            </button> -->
+                            </button>
                             <button mat-menu-item (click)="this.containerInspect(container.id)">
                                 <mat-icon style="color:royalblue;">info</mat-icon>
                                 <span>Inspect</span>
