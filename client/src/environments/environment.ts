@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiURL: `${window.location.protocol}//${window.location.host}`
+  apiURL: `http://localhost:5000`
 };
