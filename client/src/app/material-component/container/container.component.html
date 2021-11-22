@@ -8,7 +8,7 @@
                 Containers
                 <div style="float: right; margin-bottom: 20px;"> 
                     <span style="font-size: 16px; font-weight: 100;">Refresh in: </span>
-                    <mat-select (selectionChange)="onrefreshSecondsChange($event)" [(ngModel)]="this.refreshInterval" style="width: 60px; margin-left: 10px;"  >
+                    <mat-select (selectionChange)="onrefreshSecondsChange($event)" [(ngModel)]="this.refreshInterval" style="width: 60px; margin-left: 10px; font-size: 15px;"  >
                         <mat-option *ngFor="let option of refreshSeconds" [value]=option >
                             {{option}}s
                         </mat-option>
@@ -35,7 +35,7 @@
                         </button>
                     </td>
                     <td>
-                        <button style="font-size: 18px;" (click)="this.openBottomSheet(container.id)" mat-button
+                        <button style="font-size: 18px;" (click)="this.containerInspect(container.id)" mat-button
                             color="primary">
                             {{container.name.substring(1)}}
                         </button>

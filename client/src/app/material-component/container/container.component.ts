@@ -32,7 +32,7 @@ export class ContainerComponent implements OnInit {
 
   refreshSeconds = [5,10,30,60]
 
-  public refreshInterval = 5;
+  public refreshInterval = 10;
 
   
   inProgress = false

@@ -34,7 +34,7 @@ export class StatsComponent implements OnInit {
 
   ngOnInit(): void {
    
-    const source = interval(5000);
+    const source = interval(1000);
     source
     .pipe()
     .takeWhile(()=> this.isOpen)
