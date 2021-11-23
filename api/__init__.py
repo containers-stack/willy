@@ -50,9 +50,11 @@ def connect():
 from api.mod_container.controllers import mod_container as container_module
 from api.mod_log.controllers import mod_log as mod_log
 from api.mod_stats.controllers import mod_stats as mod_stats
+from api.mod_dashboard.controllers import mod_dashboard as mod_dashboard
 # ---
 
 # Register blueprint(s)
 app.register_blueprint(container_module)
 app.register_blueprint(mod_log)
 app.register_blueprint(mod_stats)
+app.register_blueprint(mod_dashboard)

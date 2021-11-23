@@ -2,7 +2,7 @@
     <mat-grid-tile>
         <mat-card class="card one">
             <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-                <div style="font-weight: bold;">52</div>
+                <div style="font-weight: bold;">{{this.dashboard?.containers}}</div>
                 <span>Containers</span>
             </mat-card-title>
           </mat-card>
@@ -10,7 +10,7 @@
     <mat-grid-tile>
         <mat-card class="card tow">
             <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-                <div style="font-weight: bold;">35</div>
+                <div style="font-weight: bold;">{{this.dashboard?.images}}</div>
                 <span>Images</span>
             </mat-card-title>
           </mat-card>
@@ -18,7 +18,7 @@
     <mat-grid-tile>
         <mat-card class="card tree">
             <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-                <div style="font-weight: bold;">2</div>
+                <div style="font-weight: bold;">{{this.dashboard?.vol}}</div>
                 <span >Volumes</span>
             </mat-card-title>
           </mat-card>
@@ -26,8 +26,8 @@
     <mat-grid-tile>
         <mat-card class="card four">
             <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-                <div style="font-weight: bold;">0</div>
-                <span >NIC</span>
+                <div style="font-weight: bold;">{{this.dashboard?.net}}</div>
+                <span >Networking</span>
             </mat-card-title>
           </mat-card>
     </mat-grid-tile>
