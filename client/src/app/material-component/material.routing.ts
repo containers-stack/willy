@@ -18,11 +18,16 @@ import { SliderComponent } from './slider/slider.component';
 import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
 import { ContainerComponent } from './container/container.component';
 import { LogComponent } from './container/log/log.component';
+import { AboutUsComponent } from './about-us/about-us.component';
 
 export const MaterialRoutes: Routes = [
   {
     path: 'container',
     component: ContainerComponent
+  },
+  {
+    path: 'about',
+    component: AboutUsComponent
   },
   {
     path: 'logs',
