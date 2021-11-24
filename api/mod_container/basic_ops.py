@@ -23,33 +23,33 @@ def is_container_exist(container_id):
     return True
 
 
-# stop_container stop container by id (can work with name but not intended to ...)
-def stop_container(container_id):
-    print("stop_container:")
+# pause_container pause container by id (can work with name but not intended to ...)
+def pause_container(container_id):
+    print("pause_container:")
     try:
-        print("stop_container:stopping container: {0}".format(container_id))
+        print("pause_container:pauseping container: {0}".format(container_id))
         is_container_exist(container_id)
-        Sdk.docker_client.stop(container_id)
+        Sdk.docker_client.pause(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("stop_container:internal error:could not stop container : {0}".format(err))
+        print("pause_container:internal error:could not pause container : {0}".format(err))
         raise err
     except docker.errors.APIError as err:
-        print("stop_container:docker error:could not stop container: {0}".format(err))
+        print("pause_container:docker error:could not pause container: {0}".format(err))
         raise
 
 
-# start_container start container by id (can work with name but not intended to ...)
-def start_container(container_id):
-    print("start_container:")
+# unpause_container unpause container by id (can work with name but not intended to ...)
+def unpause_container(container_id):
+    print("unpause_container:")
     try:
-        print("start_container:start container: {0}".format(container_id))
+        print("unpause_container:unpause container: {0}".format(container_id))
         is_container_exist(container_id)
-        Sdk.docker_client.start(container_id)
+        Sdk.docker_client.unpause(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("start_container:internal error:could not start container : {0}".format(err))
+        print("unpause_container:internal error:could not unpause container : {0}".format(err))
         raise err
     except (docker.errors.APIError, docker.errors.DeprecatedMethod) as err:
-        print("start_container:error:could not start container: {0}".format(err))
+        print("unpause_container:error:could not unpause container: {0}".format(err))
         raise
 
 
@@ -61,7 +61,7 @@ def restart_container(container_id):
         is_container_exist(container_id)
         Sdk.docker_client.restart(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("stop_container:internal error:could not stop container : {0}".format(err))
+        print("pause_container:internal error:could not pause container : {0}".format(err))
         raise err
     except docker.errors.APIError as err:
         print("restart_container:error:could not restart container: {0}".format(err))
@@ -69,13 +69,12 @@ def restart_container(container_id):
 
 
 # remove_container
-def remove_container(container_id, volume=False, link=False, force=False):
+def remove_container(container_id, volume=False, link=False, force=True):
     print("remove_container:")
     try:
         print("remove_container:removing container: {0}".format(container_id))
         # remove_container(container, v=False, link=False, force=False)¶
         is_container_exist(container_id)
-        stop_container(container_id)
         Sdk.docker_client.remove_container(container_id, v=volume, link=link, force=force)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
         print("remove_container:internal error:could not remove container : {0}".format(err))

@@ -62,9 +62,9 @@ export class ContainerService {
     )
   }
 
-  // HttpClient API post() method => Stop container
-  stop(id: string): Observable<any> {
-    return this.http.put<any>(this.apiURL + '/containers/stop?id=' + id, this.httpOptions)
+  // HttpClient API post() method => pause container
+  pause(id: string): Observable<any> {
+    return this.http.put<any>(this.apiURL + '/containers/pause?id=' + id, this.httpOptions)
     .pipe(
       catchError((err) =>{
         console.log(err)
@@ -73,8 +73,8 @@ export class ContainerService {
     )
   }
 
-  start(id: string): Observable<any> {
-    return this.http.put<any>(this.apiURL + '/containers/start?id=' + id, this.httpOptions)
+  unpause(id: string): Observable<any> {
+    return this.http.put<any>(this.apiURL + '/containers/unpause?id=' + id, this.httpOptions)
     .pipe(
       catchError((err) =>{
         console.log(err)

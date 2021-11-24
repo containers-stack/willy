@@ -32,7 +32,7 @@ export class ContainerComponent implements OnInit {
 
   refreshSeconds = [5,10,30,60]
 
-  public refreshInterval = 5;
+  public refreshInterval = 10;
 
   
   inProgress = false
@@ -121,12 +121,13 @@ export class ContainerComponent implements OnInit {
       })
   }
 
-  stop(id: string):void{
+  pause(id: string):void{
     this.inProgress = true;
-    this._containerSvc.stop(id)
+    this._containerSvc.pause(id)
       .subscribe((response: any) => {
         this.notifierService.notify('success', response.msg)
         this.inProgress = false;
+
       },
       (error: any) => {
         this.notifierService.notify('error', `Failed to stop container: ${error.message}`)  
@@ -134,16 +135,16 @@ export class ContainerComponent implements OnInit {
       })
   }
   
-  start(id: string):void{
+  unpause(id: string):void{
     this.inProgress = true;
-    this._containerSvc.start(id)
+    this._containerSvc.unpause(id)
       .subscribe(
         (response: any) => {
         this.notifierService.notify('success', response.msg)
         this.inProgress = false;
         },
       (error: any) => {
-        this.notifierService.notify('error', `Failed to start container: ${error.message}`)  
+        this.notifierService.notify('error', `Failed to unpause container: ${error.message}`)  
         this.inProgress = false;
       })
   }
@@ -154,12 +155,19 @@ export class ContainerComponent implements OnInit {
       .subscribe((response: any) => {
         this.notifierService.notify('success', response.msg)
         this.inProgress = false;
+        this.RemoveElementFromContainers(id);
       },
       (error: any) => {
         this.notifierService.notify('error', `Failed to delete container: ${error.message}`)  
         this.inProgress = false;
       })
   }
+
+  RemoveElementFromContainers(containerId: string) {
+    this.containers.forEach((value,index)=>{
+        if(value.id==containerId) this.containers.splice(index,1);
+    });
+  }  
 
   localDateTime(dateNumber: string): string {
     return new Date(dateNumber).toLocaleString()

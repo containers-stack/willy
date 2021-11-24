@@ -1,0 +1,26 @@
+<mat-grid-list cols="2" rowHeight="1:1">
+    <mat-grid-tile *ngFor="let contributor of this.contributors;">
+        <mat-card class="oh text-center little-profile">
+            <img mat-card-image src="assets/images/background/profile-bg.jpg" alt="Photo of a Shiba Inu">
+            <mat-card-content>
+                <div class="pro-img">
+                    <img src="{{contributor.img}}" width="100" alt="user" class="img-circle">
+                </div>
+                <h3 class="m-b-0">{{contributor.name}}</h3>
+                <h6 class="m-t-0 ">{{contributor.discription}}</h6>
+                <h6 class="m-t-0 ">{{contributor.email}}</h6>
+                <mat-card-actions>
+                    <button  (click)="follow(contributor.follow)" mat-raised-button color="warn">Follow</button>
+                </mat-card-actions>
+                <div style="margin-top: 20px;">
+                    <div fxFlex.gt-sm="50%" fxFlex.gt-xs="50%" fxFlex="100">
+                        <img src="https://img.icons8.com/color/48/000000/linkedin.png" (click)="follow(contributor.linkdin)"/>
+                    </div>
+                    <div fxFlex.gt-sm="50%" fxFlex.gt-xs="50%" fxFlex="100">
+                        <img src="https://img.icons8.com/fluency/48/000000/github.png" (click)="follow(contributor.github)"/>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+</mat-grid-list>

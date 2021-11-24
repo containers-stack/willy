@@ -8,7 +8,7 @@
                 Containers
                 <div style="float: right; margin-bottom: 20px;"> 
                     <span style="font-size: 16px; font-weight: 100;">Refresh in: </span>
-                    <mat-select (selectionChange)="onrefreshSecondsChange($event)" [(ngModel)]="this.refreshInterval" style="width: 60px; margin-left: 10px;"  >
+                    <mat-select (selectionChange)="onrefreshSecondsChange($event)" [(ngModel)]="this.refreshInterval" style="width: 60px; margin-left: 10px; font-size: 15px;"  >
                         <mat-option *ngFor="let option of refreshSeconds" [value]=option >
                             {{option}}s
                         </mat-option>
@@ -27,15 +27,15 @@
                 </tr>
                 <tr *ngFor="let container of this.containers;">
                     <td>
-                        <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.stop(container.id)">
+                        <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.pause(container.id)">
                             <mat-icon style="color:tomato;">stop</mat-icon>
                         </button>
-                        <button *ngIf="container.state !== 'running'" mat-menu-item (click)="this.start(container.id)">
+                        <button *ngIf="container.state !== 'running'" mat-menu-item (click)="this.unpause(container.id)">
                             <mat-icon style="color:rgb(58, 204, 13);">play_arrow</mat-icon>
                         </button>
                     </td>
                     <td>
-                        <button style="font-size: 18px;" (click)="this.openBottomSheet(container.id)" mat-button
+                        <button style="font-size: 18px;" (click)="this.containerInspect(container.id)" mat-button
                             color="primary">
                             {{container.name.substring(1)}}
                         </button>
@@ -57,10 +57,10 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #menu="matMenu">
-                            <!-- <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.containerLogs(container)">
+                            <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.containerLogs(container)">
                                 <mat-icon style="color:rgb(223, 109, 44);">event_note</mat-icon>
                                 <span>Logs</span>
-                            </button> -->
+                            </button>
                             <button mat-menu-item (click)="this.containerInspect(container.id)">
                                 <mat-icon style="color:royalblue;">info</mat-icon>
                                 <span>Inspect</span>

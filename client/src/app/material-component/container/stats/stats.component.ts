@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto'
 import { ContainerService } from '../container.service';
-import { interval, Subscription } from 'rxjs';
+import { interval } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
 
 @Component({
@@ -30,11 +30,18 @@ export class StatsComponent implements OnInit {
   
   public netChart: Chart | undefined;
 
+  private isOpen = true;
+
   ngOnInit(): void {
    
-    this.stats()
-    const source = interval(5000);
-    source.subscribe(() => this.stats())
+    const source = interval(1000);
+    source
+    .pipe()
+    .takeWhile(()=> this.isOpen)
+    .subscribe(()=> {
+      console.log('STATE:' + this.isOpen)
+      this.stats()
+    })
 
     this.memoryChart = new Chart(this.ctxMemory, {
       type: 'line',
@@ -170,5 +177,9 @@ export class StatsComponent implements OnInit {
   onItemChange(event: any):void{
     console.log('Change to: ' + event.value)
     this.activeStats = event.value;
+  }
+
+  ngOnDestroy(){
+    this.isOpen = false;
   }
 }

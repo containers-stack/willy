@@ -40,10 +40,10 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { LogComponent } from './container/log/log.component';
 import { StatsComponent } from './container/stats/stats.component';
 import { environment } from 'src/environments/environment';
+import { AboutUsComponent } from './about-us/about-us.component';
 
-//const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
-const config: SocketIoConfig = { url: environment.apiURL , options: {
-  transports: ['websocket' , "polling"]
+const socetConfig: SocketIoConfig = { url: environment.apiURL , options: {
+  transports: ["polling", 'websocket']
 } };
 
 
@@ -58,7 +58,7 @@ const config: SocketIoConfig = { url: environment.apiURL , options: {
     FlexLayoutModule,
     CdkTableModule,
     NgxJsonViewerModule,
-    SocketIoModule.forRoot(config),
+    SocketIoModule.forRoot(socetConfig),
   ],
   providers: [],
   entryComponents: [DialogOverviewExampleDialogComponent],
@@ -85,7 +85,8 @@ const config: SocketIoConfig = { url: environment.apiURL , options: {
     SearchTextComponent,
     HighlightSearchPipe,
     LogComponent,
-    StatsComponent
+    StatsComponent,
+    AboutUsComponent
   ]
 })
 export class MaterialComponentsModule {}
