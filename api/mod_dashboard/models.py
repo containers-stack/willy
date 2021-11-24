@@ -19,7 +19,7 @@ class Dashboard:
     # Sum of stopped containers
     stopped = int
     # Sum of host memory
-    hostMemory = int
+    memoryUsage = int
     # Sum of host cors
     hostcors = int
     # Events
@@ -27,7 +27,7 @@ class Dashboard:
 
 
     # New instance instantiation procedure
-    def __init__(self, containers,images,vol,net,running,paused,stopped,hostMemory,hostcors,events):
+    def __init__(self, containers,images,vol,net,running,paused,stopped,memoryUsage,hostcors,events):
         self.containers = containers
         self.images     = images
         self.vol        = vol
@@ -35,7 +35,7 @@ class Dashboard:
         self.running    = running
         self.paused     = paused
         self.stopped    = stopped
-        self.hostMemory = hostMemory
+        self.hostMemory = memoryUsage
         self.hostcors   = hostcors
         self.events     = events
 

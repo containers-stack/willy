@@ -26,6 +26,14 @@ def api_dashboard():
         
         events = Sdk.docker_client.events(until=until, decode=True)
 
+        memory_usage = 0
+
+        for container in Sdk.docker_client.containers():
+
+            container_mem_usade = Sdk.docker_client.stats(container=container['Id'], stream=False)
+
+            memory_usage += container_mem_usade['memory_stats']['usage']
+
         dashboard = Dashboard(
             containers = system_info['Containers'],
             images     = system_info['Images'],
@@ -34,7 +42,7 @@ def api_dashboard():
             running    = system_info['ContainersRunning'],
             stopped    = system_info['ContainersStopped'],
             paused     = system_info['ContainersPaused'],
-            hostMemory = system_info['MemTotal'],
+            memoryUsage = round((memory_usage / system_info['MemTotal']) * 100, 2),
             hostcors   = system_info['NCPU'],
             events     = []
         )

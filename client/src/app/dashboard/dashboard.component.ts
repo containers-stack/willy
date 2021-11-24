@@ -19,9 +19,11 @@ export class DashboardComponent implements AfterViewInit {
 	private apiURL = environment.apiURL;
 
 	private ctxRuningContainers = 'runingContainers';
+	
 	private ctxContainersInfo = 'containersInfo';
 
 	public containersChart: Chart | undefined;
+	
 	public containersInfoChart: Chart | undefined;
 
 	public dashboard: any;
@@ -59,18 +61,10 @@ export class DashboardComponent implements AfterViewInit {
 			}
 		});
 
-		for (let index = 0; index < 20; index++) {
-			this.containersChart?.data.labels?.push('')
-			this.containersChart?.data.datasets.forEach((datasets) => {
-				datasets.data.push(Math.random() * 100)
-			})
-
-		}		
-
 		this.getDashboard()
 			.subscribe((response: any) => {
 				this.dashboard = response;
-				// this.updateChart()
+				this.updateChart()
 			})
 
 		const refreshContainer$ = Observable.of(null)
@@ -80,7 +74,7 @@ export class DashboardComponent implements AfterViewInit {
 					.subscribe(
 						(response: any) => {
 							this.dashboard = response;
-							// this.updateChart()
+							this.updateChart()
 						},
 						(error: any) => {
 							this.notifierService.notify('error', `Failed to list containers: ${error.message}`)
@@ -110,16 +104,40 @@ export class DashboardComponent implements AfterViewInit {
 	}
 
 	updateChart() {
+
+		this.containersChart?.data.labels?.push('')
+		this.containersChart?.data.datasets.forEach((datasets) => {
+			datasets.data.push(this.dashboard.running)
+		})
+
+		this.containersChart?.update()
+
+		this.containersInfoChart?.destroy()
+
+		const backgroundColor: any[] = [];
+
+		if(this.dashboard?.running > 0){
+			
+			backgroundColor.push('rgb(54, 162, 235)')
+		}
+
+		if(this.dashboard?.paused > 0){
+			
+			backgroundColor.push('rgb(255, 205, 86)')
+		}
+
+		if(this.dashboard?.stopped > 0){
+			
+			backgroundColor.push('rgb(255, 99, 132')
+		}
+
 		this.containersInfoChart = new Chart(this.ctxContainersInfo, {
-			type: 'pie',
+			type: 'doughnut',
 			data: {
-				labels: ['Running', 'Paused', 'Stopped'],
+				labels: [],
 				datasets: [{
-					data: [0],
-					backgroundColor: [
-						'rgb(54, 162, 235)',
-						'rgb(255, 205, 86)',
-						'rgb(255, 99, 132)'],
+					data: [],
+					backgroundColor: backgroundColor,
 				}],
 
 			},
@@ -133,10 +151,21 @@ export class DashboardComponent implements AfterViewInit {
 			}
 
 		});
-		this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.running, this.dashboard?.paused, this.dashboard?.stopped)
-		this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.running)
-		this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.paused)
-		this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.stopped)
+		
+		if(this.dashboard?.running > 0){
+			this.containersInfoChart?.data.labels?.push('Running')	
+			this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.running)
+		}
+
+		if(this.dashboard?.paused > 0){
+			this.containersInfoChart?.data.labels?.push('Paused')	
+			this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.paused)
+		}
+		if(this.dashboard?.stopped > 0){
+			this.containersInfoChart?.data.labels?.push('Stopped')	
+			this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.stopped)
+		}
+
 		this.containersInfoChart?.update()
 	}
 
