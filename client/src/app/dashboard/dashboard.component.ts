@@ -7,7 +7,6 @@ import { throwError } from 'rxjs';
 import { Observable } from 'rxjs-compat';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ContainerService } from '../material-component/container/container.service';
 
 
 @Component({
@@ -71,7 +70,7 @@ export class DashboardComponent implements AfterViewInit {
 		this.getDashboard()
 			.subscribe((response: any) => {
 				this.dashboard = response;
-				this.updateChart()
+				// this.updateChart()
 			})
 
 		const refreshContainer$ = Observable.of(null)
@@ -81,7 +80,7 @@ export class DashboardComponent implements AfterViewInit {
 					.subscribe(
 						(response: any) => {
 							this.dashboard = response;
-							this.updateChart()
+							// this.updateChart()
 						},
 						(error: any) => {
 							this.notifierService.notify('error', `Failed to list containers: ${error.message}`)
