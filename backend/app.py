@@ -9,6 +9,6 @@ PORT = os.getenv("PORT", 3000)
 print(PORT)
 
 # TODO Use flask run
-# app.run(host='0.0.0.0', port=PORT, debug=True)
-socketio.run(app, debug=True, host='0.0.0.0', port=PORT)
+#app.run(host='0.0.0.0', port=PORT, debug=True)
+
 
