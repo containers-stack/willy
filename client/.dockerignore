@@ -4,5 +4,5 @@
 .vscode/
 .idea/
 __pycache__/
-client/node_modules/
-client/dist/
+node_modules/
+dist/
