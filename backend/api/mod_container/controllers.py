@@ -15,13 +15,13 @@ from api.mod_container.models import ContainerEncoder
 # ---
 
 
-class MySchema(Schema):
+class Schema(Schema):
     id = fields.Str(required=True)
 
 
 # Define the blueprint: 'container', set its url prefix: app.url/containers
 mod_container = Blueprint('container', __name__, url_prefix='/containers')
-schema_instance = MySchema()
+schema_instance = Schema()
 
 
 # Set the route and accepted methods
@@ -29,7 +29,11 @@ schema_instance = MySchema()
 def api_list_containers():
     try:
         containers = list_containers()
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to get list of containers {err.explanation}')
+       return str(err.explanation), 500 
     except Exception as e:
+        app.logger.error(f'Failed to get list of containers {str(e)}')
         return str(e), 500
 
     return ContainerEncoder().encode(containers), 200
@@ -42,15 +46,14 @@ def api_inspect_container():
     # Validate request parameter
     errors = schema_instance.validate(request.args)  # <--fix here
     if errors:
-        abort(400, str(errors))
-
-    # container_instance = Sdk.docker_client.containers(all=True, filters={'id': container_id})[0]
+        return 'Container id must be supplied', 404
     try:
         container_instance = inspect_container(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-       print("{0}".format(err))
-       return str(err), 500 
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to inspect container {err.explanation}')
+       return str(err.explanation), 500 
     except Exception as e:
+        app.logger.error(f'Failed to inspect container {str(e)}')
         return str(e), 500
 
     return container_instance, 200
@@ -63,17 +66,17 @@ def api_restart_container():
     # Validate request parameter
     errors = schema_instance.validate(request.args)  # <--fix here
     if errors:
-        abort(400, str(errors))
-
+        return 'Container id must be supplied', 404
     try:
-        restart_container(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-       print("{0}".format(err))
-       return str(err), 500 
+        container = restart_container(container_id)
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to restart container {err.explanation}')
+       return str(err.explanation), 500 
     except Exception as e:
+        app.logger.error(f'Failed to restart container {str(e)}')
         return str(e), 500
 
-    return flask.jsonify(isSuccess=True, msg='Container restarted'), 200
+    return ContainerEncoder().encode(container), 200
 
 
 # api_pause_container api_pause container by id
@@ -84,16 +87,17 @@ def api_pause_container():
     # Validate request parameter
     errors = schema_instance.validate(request.args)  # <--fix here
     if errors:
-        abort(400, str(errors))
+        return str('Container id must be supplied'), 404
     try:
-        pause_container(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-       print("{0}".format(err))
-       return str(err), 500 
+        container = pause_container(container_id)
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to pause container {err.explanation}')
+       return str(err.explanation), 500 
     except Exception as e:
+        app.logger.error(f'Failed to pause container {str(e)}')
         return str(e), 500
 
-    return flask.jsonify(isSuccess=True, msg='Container paused'), 200
+    return ContainerEncoder().encode(container), 200
 
 
 # api_unpause_container unpause container by id
@@ -104,7 +108,7 @@ def api_unpause_container():
     # Validate request parameter
     errors = schema_instance.validate(request.args)  # <--fix here
     if errors:
-        abort(400, str(errors))
+        return str('Container id must be supplied'), 404
     try:
         unpause_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
@@ -124,7 +128,7 @@ def api_remove_container():
     # Validate request parameter
     errors = schema_instance.validate(request.args)  # <--fix here
     if errors:
-        abort(400, str(errors))
+        return str('Container id must be supplied'), 404
     try:
         remove_container(container_id)
     except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:

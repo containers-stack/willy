@@ -1,7 +1,7 @@
 # B"H
 
 import docker
-
+from api import app
 from api.mod_container.models import *
 from api.mod_container.errors import *
 from api.mod_sdk.models import Sdk
@@ -25,18 +25,17 @@ def is_container_exist(container_id):
 
 # pause_container pause container by id (can work with name but not intended to ...)
 def pause_container(container_id):
-    print("pause_container:")
-    try:
-        print("pause_container:pauseping container: {0}".format(container_id))
-        is_container_exist(container_id)
-        Sdk.docker_client.pause(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("pause_container:internal error:could not pause container : {0}".format(err))
-        raise err
-    except docker.errors.APIError as err:
-        print("pause_container:docker error:could not pause container: {0}".format(err))
-        raise
-
+    app.logger.info("restart_container:")
+    
+    Sdk.docker_client.pause(container_id)
+    
+    container = Sdk.docker_client.containers(all=False, filters={'id': container_id})[0]
+    
+    return Container(id=container.get('Id'),
+                     name=container.get('Names')[0],
+                     age=(container.get('Created')),
+                     status=container.get('Status'),
+                     state=container.get('State'))
 
 # unpause_container unpause container by id (can work with name but not intended to ...)
 def unpause_container(container_id):
@@ -55,18 +54,20 @@ def unpause_container(container_id):
 
 # restart_container restart container by id (can work with name but not intended to ...)
 def restart_container(container_id):
-    print("restart_container:")
-    try:
-        print("restart_container:restart container: {0}".format(container_id))
-        is_container_exist(container_id)
-        Sdk.docker_client.restart(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("pause_container:internal error:could not pause container : {0}".format(err))
-        raise err
-    except docker.errors.APIError as err:
-        print("restart_container:error:could not restart container: {0}".format(err))
-        raise
+    
+    app.logger.info("restart_container:")
+    
+    Sdk.docker_client.restart(container_id)
+    
+    container = Sdk.docker_client.containers(all=False, filters={'id': container_id})[0]
+    
+    return Container(id=container.get('Id'),
+                     name=container.get('Names')[0],
+                     age=(container.get('Created')),
+                     status=container.get('Status'),
+                     state=container.get('State'))
 
+    
 
 # remove_container
 def remove_container(container_id, volume=False, link=False, force=True):
@@ -86,30 +87,16 @@ def remove_container(container_id, volume=False, link=False, force=True):
 
 # inspect_container
 def inspect_container(container_id):
-    print("inspect_container:")
-    try:
-        print("inspect_container:inspecting container: {0}".format(container_id))
-        is_container_exist(container_id)
-        container = Sdk.docker_client.inspect_container(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("inspect_container:internal error:could not inspect container : {0}".format(err))
-        raise err
-    except docker.errors.APIError as err:
-        print("inspect_container:error:could not inspect container: {0}".format(err))
-        raise
-
-    return container
+    
+    app.logger.info(f'inspect_container:{container_id}')
+    return Sdk.docker_client.inspect_container(container_id)
 
 
 #
 def list_containers():
     containers = []
 
-    try:
-        containers_list = Sdk.docker_client.containers(all=True)
-    except docker.errors.APIError as err:
-        print("list_containers:error:could not list containers: {0}".format(err))
-        raise
+    containers_list = Sdk.docker_client.containers(all=True)
 
     for container_instance in containers_list:
         containers.append(Container(id=container_instance.get('Id'),
@@ -118,4 +105,5 @@ def list_containers():
                                     status=container_instance.get('Status'),
                                     state=container_instance.get('State'))
                           )
+    
     return containers

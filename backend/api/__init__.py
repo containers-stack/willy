@@ -19,12 +19,18 @@ docker_client = docker.APIClient(base_url='unix://var/run/docker.sock')
 
 @app.route('/')
 def root():
-  return jsonify({'status':'up'})
+
+  app.logger.info('root request')
+  return jsonify(
+    {
+      'status':'up',
+      'docker-client': docker_client.version()
+    })
 
 
 @socketio.on('connect')
 def connect():
-    print('Client Connected!')
+  app.logger.info('Client Connected!')
 
 
 # --- Import can't be on top of like (PEP 8: E402 module level import not at top of file) for some reason.
