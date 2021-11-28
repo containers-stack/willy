@@ -1,4 +1,5 @@
 # B"H
+import datetime
 from json import JSONEncoder
 
 
@@ -35,7 +36,7 @@ class Dashboard:
         self.running    = running
         self.paused     = paused
         self.stopped    = stopped
-        self.hostMemory = memoryUsage
+        self.memoryUsage = memoryUsage
         self.hostcors   = hostcors
         self.events     = events
 
@@ -60,7 +61,7 @@ class Event:
     eventContainerName = str
     
     # Event date
-    eventTime = int
+    eventTime = str
 
 
     # New instance instantiation procedure

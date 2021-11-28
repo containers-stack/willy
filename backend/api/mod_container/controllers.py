@@ -110,15 +110,15 @@ def api_unpause_container():
     if errors:
         return str('Container id must be supplied'), 404
     try:
-        unpause_container(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-       print("{0}".format(err))
-       return str(err), 500 
+       container = unpause_container(container_id)
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to unpause container {err.explanation}')
+       return str(err.explanation), 500 
     except Exception as e:
+        app.logger.error(f'Failed to unpause container {str(e)}')
         return str(e), 500
 
-    return flask.jsonify(isSuccess=True, msg='Container unpause'), 200
-
+    return ContainerEncoder().encode(container), 200
 
 # api_remove_container start container by id
 @mod_container.route('/remove', methods=['DELETE'])
@@ -131,10 +131,11 @@ def api_remove_container():
         return str('Container id must be supplied'), 404
     try:
         remove_container(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-       print("{0}".format(err))
-       return str(err), 500 
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to remove container {err.explanation}')
+       return str(err.explanation), 500 
     except Exception as e:
+        app.logger.error(f'Failed to remove container {str(e)}')
         return str(e), 500
 
-    return flask.jsonify(isSuccess=True, msg='Container removed'), 200
+    return flask.jsonify(msg='Container removed'), 200

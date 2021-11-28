@@ -54,7 +54,7 @@ def api_dashboard():
                                             eventContainerId     = event['id'],
                                             eventAction          = event['Action'],
                                             eventFrom            = event['from'],
-                                            eventTime            = event['time'],
+                                            eventTime            = str(datetime.datetime.fromtimestamp(event['time'])),
                                             eventContainerName   = event['Actor']['Attributes']['name']
                                         )
                                 )

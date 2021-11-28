@@ -25,7 +25,8 @@ def is_container_exist(container_id):
 
 # pause_container pause container by id (can work with name but not intended to ...)
 def pause_container(container_id):
-    app.logger.info("restart_container:")
+    
+    app.logger.info("pause container")
     
     Sdk.docker_client.pause(container_id)
     
@@ -39,23 +40,24 @@ def pause_container(container_id):
 
 # unpause_container unpause container by id (can work with name but not intended to ...)
 def unpause_container(container_id):
-    print("unpause_container:")
-    try:
-        print("unpause_container:unpause container: {0}".format(container_id))
-        is_container_exist(container_id)
-        Sdk.docker_client.unpause(container_id)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("unpause_container:internal error:could not unpause container : {0}".format(err))
-        raise err
-    except (docker.errors.APIError, docker.errors.DeprecatedMethod) as err:
-        print("unpause_container:error:could not unpause container: {0}".format(err))
-        raise
+    
+    app.logger.info("pause container")
+    
+    Sdk.docker_client.unpause(container_id)
+    
+    container = Sdk.docker_client.containers(all=False, filters={'id': container_id})[0]
+    
+    return Container(id=container.get('Id'),
+                     name=container.get('Names')[0],
+                     age=(container.get('Created')),
+                     status=container.get('Status'),
+                     state=container.get('State'))
 
 
 # restart_container restart container by id (can work with name but not intended to ...)
 def restart_container(container_id):
     
-    app.logger.info("restart_container:")
+    app.logger.info("restart_container")
     
     Sdk.docker_client.restart(container_id)
     
@@ -71,20 +73,10 @@ def restart_container(container_id):
 
 # remove_container
 def remove_container(container_id, volume=False, link=False, force=True):
-    print("remove_container:")
-    try:
-        print("remove_container:removing container: {0}".format(container_id))
-        # remove_container(container, v=False, link=False, force=False)¶
-        is_container_exist(container_id)
-        Sdk.docker_client.remove_container(container_id, v=volume, link=link, force=force)
-    except (ContainerIdNotFound, ContainerIdMuchTooManny, ContainerIdDoNotMuch) as err:
-        print("remove_container:internal error:could not remove container : {0}".format(err))
-        raise err
-    except docker.errors.APIError as err:
-        print("remove_container:error:could not remove container: {0}".format(err))
-        raise
-
-
+    
+    app.logger.info("remove_container:")
+    Sdk.docker_client.remove_container(container_id, v=volume, link=link, force=force)
+    
 # inspect_container
 def inspect_container(container_id):
     
@@ -92,8 +84,11 @@ def inspect_container(container_id):
     return Sdk.docker_client.inspect_container(container_id)
 
 
-#
+# list all containers
 def list_containers():
+
+    app.logger.info(f'list all containers')
+    
     containers = []
 
     containers_list = Sdk.docker_client.containers(all=True)

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { NotifierService } from 'angular-notifier';
 import Chart from 'chart.js/auto'
 import { plugins } from 'chartist';
@@ -14,28 +14,31 @@ import { environment } from 'src/environments/environment';
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements AfterViewInit, OnDestroy {
 
 	private apiURL = environment.apiURL;
 
-	private ctxRuningContainers = 'runingContainers';
+	private ctxMemoryUsage = 'memoryUsage';
 	
 	private ctxContainersInfo = 'containersInfo';
 
-	public containersChart: Chart | undefined;
+	public memoryUsageChart: Chart | undefined;
 	
 	public containersInfoChart: Chart | undefined;
 
 	public dashboard: any;
 
-	public refreshInterval = 10;
+	public refreshInterval = 5;
+
+	private isActive = true;
 
 	constructor(private http: HttpClient,
 		private notifierService: NotifierService) { }
 
-	ngAfterViewInit() {
 
-		this.containersChart = new Chart(this.ctxRuningContainers, {
+	ngAfterViewInit() {
+		this.isActive = true;
+		this.memoryUsageChart = new Chart(this.ctxMemoryUsage, {
 			type: 'line',
 			data: {
 				labels: [''],
@@ -70,7 +73,8 @@ export class DashboardComponent implements AfterViewInit {
 		const refreshContainer$ = Observable.of(null)
 			.switchMap(e => this.refreshObs())
 			.map(() => {
-				this.getDashboard()
+				if(this.isActive){
+					this.getDashboard()
 					.subscribe(
 						(response: any) => {
 							this.dashboard = response;
@@ -79,6 +83,7 @@ export class DashboardComponent implements AfterViewInit {
 						(error: any) => {
 							this.notifierService.notify('error', `Failed to list containers: ${error.message}`)
 						})
+				}
 			})
 			.repeat();
 
@@ -88,9 +93,6 @@ export class DashboardComponent implements AfterViewInit {
 		});
 
 	}
-
-	refreshObs() { return Observable.timer(this.refreshInterval * 1000) }
-
 
 	// HttpClient API get() method => Fetch dashboard
 	getDashboard(): Observable<any> {
@@ -105,12 +107,13 @@ export class DashboardComponent implements AfterViewInit {
 
 	updateChart() {
 
-		this.containersChart?.data.labels?.push('')
-		this.containersChart?.data.datasets.forEach((datasets) => {
-			datasets.data.push(this.dashboard.running)
+		this.memoryUsageChart?.data.labels?.push('')
+		this.memoryUsageChart?.data.datasets.forEach((datasets) => {
+			
+			datasets.data.push(this.dashboard.memoryUsage)
 		})
 
-		this.containersChart?.update()
+		this.memoryUsageChart?.update()
 
 		this.containersInfoChart?.destroy()
 
@@ -147,7 +150,9 @@ export class DashboardComponent implements AfterViewInit {
 					legend: {
 						position: "bottom"
 					}
-				}
+				},
+				animation:false
+
 			}
 
 		});
@@ -167,6 +172,17 @@ export class DashboardComponent implements AfterViewInit {
 		}
 
 		this.containersInfoChart?.update()
+	}
+
+	refreshObs() { return Observable.timer(this.refreshInterval * 1000) 
+	}
+
+	localDateTime(dateNumber: string): string {
+		return new Date(dateNumber).toLocaleString()
+	  }
+
+	ngOnDestroy(): void {
+		this.isActive = false;
 	}
 
 }
