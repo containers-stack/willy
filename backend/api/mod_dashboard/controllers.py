@@ -23,8 +23,10 @@ def api_dashboard():
         system_info = Sdk.docker_client.info()
         
         until = datetime.datetime.utcnow() - datetime.timedelta(seconds=5)
+
+        since = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
         
-        events = Sdk.docker_client.events(until=until, decode=True)
+        events = Sdk.docker_client.events(since=since, until=until, decode=True)
 
         memory_usage = 0
 
