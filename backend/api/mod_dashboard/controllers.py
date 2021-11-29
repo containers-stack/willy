@@ -13,7 +13,7 @@ from api.mod_dashboard.models import Dashboard, DashboardEncoder, Event
 # ---
 
 # Define the blueprint: 'dashboard', set its url prefix: app.url/dashboard
-mod_dashboard = Blueprint('dashboard', __name__, url_prefix='/dashboard')
+mod_dashboard = Blueprint('dashboard', __name__, url_prefix='/info')
 
 
 @mod_dashboard.route('/', methods=['GET'])

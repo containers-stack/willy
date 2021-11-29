@@ -71,7 +71,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 			})
 
 		const refreshContainer$ = Observable.of(null)
-			.switchMap(e => this.refreshObs())
+			.switchMap(() => this.refreshObs())
 			.map(() => {
 				if(this.isActive){
 					this.getDashboard()
@@ -87,8 +87,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 			})
 			.repeat();
 
-		refreshContainer$.subscribe(t => {
-			const currentTime = t;
+		refreshContainer$.subscribe(() => {
 			console.log('refresh interval = ' + this.refreshInterval);
 		});
 
@@ -96,9 +95,9 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
 	// HttpClient API get() method => Fetch dashboard
 	getDashboard(): Observable<any> {
-		return this.http.get<any>(this.apiURL + '/dashboard/')
+		return this.http.get<any>(this.apiURL + '/info/')
 			.pipe(
-				catchError((err) => {
+				catchError((err: any) => {
 					console.log(err)
 					return throwError(err)
 				})
@@ -108,7 +107,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 	updateChart() {
 
 		this.memoryUsageChart?.data.labels?.push('')
-		this.memoryUsageChart?.data.datasets.forEach((datasets) => {
+		this.memoryUsageChart?.data.datasets.forEach((datasets: { data: any[]; }) => {
 			
 			datasets.data.push(this.dashboard.memoryUsage)
 		})
