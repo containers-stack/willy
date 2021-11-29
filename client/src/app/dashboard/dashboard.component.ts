@@ -81,7 +81,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 							this.updateChart()
 						},
 						(error: any) => {
-							this.notifierService.notify('error', `Failed to list containers: ${error.message}`)
+							this.notifierService.notify('error', `Failed to get dashboard: ${error.message}`)
 						})
 				}
 			})

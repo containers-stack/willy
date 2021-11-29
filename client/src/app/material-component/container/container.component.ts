@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NotifierService } from 'angular-notifier';
@@ -22,7 +22,7 @@ export interface Container {
   templateUrl: './container.component.html',
   styleUrls: ['./container.component.css']
 })
-export class ContainerComponent implements OnInit {
+export class ContainerComponent implements OnInit , OnDestroy{
 
   containers: Container[] = [];
 
@@ -34,6 +34,7 @@ export class ContainerComponent implements OnInit {
 
   public refreshInterval = 10;
 
+  private isActive = false;
 
   inProgress = false
 
@@ -45,15 +46,24 @@ export class ContainerComponent implements OnInit {
     private _bottomSheet: MatBottomSheet,
     private notifierService: NotifierService,
     private _router: Router) { }
+  
+  
+  ngOnDestroy(): void {
+    this.isActive = false;
+  }
 
   ngOnInit() {
+    
+    this.isActive = true;
 
     this.getContainers();
 
     const refreshContainer$ = Observable.of(null)
       .switchMap(e => this.refreshObs())
       .map(() => {
-        this._containerSvc.list()
+        if(this.isActive){
+
+          this._containerSvc.list()
           .subscribe(
             (response) => {
               this.containers = response;
@@ -61,6 +71,7 @@ export class ContainerComponent implements OnInit {
             (error: any) => {
               this.notifierService.notify('error', `Failed to list containers: ${error.error}`)
             })
+        }
       })
       .repeat();
 

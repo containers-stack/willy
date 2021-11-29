@@ -48,7 +48,7 @@ def api_dashboard():
         )
 
         for event in events:
-            if event['Type'] == 'container':
+            if event['Type'] == 'container' and 'id' in event:
                 dashboard.events.append(
                                         Event(
                                             eventContainerId     = event['id'],
