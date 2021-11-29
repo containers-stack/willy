@@ -1,5 +1,0 @@
-Flask==2.0.2
-docker
-flask-socketio
-gevent-websocket
-eventlet

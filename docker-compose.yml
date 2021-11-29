@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+
+  Willy-api:
+    image: "motiio/willy-api:1.0.0"
+    container_name: willy-api
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  Willy-app:
+    image: "motiio/willy-app:1.0.0"
+    container_name: will-app
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+       - Willy-api

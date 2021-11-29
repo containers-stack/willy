@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */
+.red-bg{
+    color: red;
+}
+
+.highlight {
+    background-color: rgb(230, 106, 24);
+    font-weight: bold;
+  }
