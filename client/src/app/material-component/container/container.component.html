@@ -1,0 +1,166 @@
+<mat-sidenav-container mode="push" autosize fullscreen>
+    <mat-card>
+        <div *ngIf="this.inProgress">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+        <mat-card-content>
+            <mat-card-title>
+                Containers
+                <div style="float: right; margin-bottom: 20px;"> 
+                    <span style="font-size: 16px; font-weight: 100;">Refresh in: </span>
+                    <mat-select (selectionChange)="onrefreshSecondsChange($event)" [(ngModel)]="this.refreshInterval" style="width: 60px; margin-left: 10px; font-size: 15px;"  >
+                        <mat-option *ngFor="let option of refreshSeconds" [value]=option >
+                            {{option}}s
+                        </mat-option>
+                    </mat-select>
+                </div>
+            </mat-card-title>
+            <div *ngIf="this.containers.length == 0" style="text-align: center; padding-top: 5%;">
+                <h1>There are no containers</h1>
+                <img src="../../../assets/images/empty.svg" style="width:20%;">
+            </div>
+            <table *ngIf="this.containers.length > 0">
+                <tr>
+                    <th *ngFor="let header of this.headers; let i = index">
+                        {{this.headers[i]}}
+                    </th>
+                </tr>
+                <tr *ngFor="let container of this.containers;">
+                    <td>
+                        <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.pause(container.id)">
+                            <mat-icon style="color:tomato;">stop</mat-icon>
+                        </button>
+                        <button *ngIf="container.state !== 'running'" mat-menu-item (click)="this.unpause(container.id)">
+                            <mat-icon style="color:rgb(58, 204, 13);">play_arrow</mat-icon>
+                        </button>
+                    </td>
+                    <td>
+                        <button style="font-size: 18px;" (click)="this.containerInspect(container.id)" mat-button
+                            color="primary">
+                            {{container.name.substring(1)}}
+                        </button>
+                    </td>
+                    <td>{{container.id.substring(0,12)}}</td>
+                    <td>
+                        <div *ngIf="container.state == 'running'" class="chip"
+                            style="background-color: rgb(123, 192, 140);">
+                            {{container.state}}
+                        </div>
+                        <div *ngIf="container.state != 'running'" class="chip"
+                            style="background-color: rgb(223, 146, 4);">
+                            {{container.state}}
+                        </div>
+                    </td>
+                    <td>{{container.status}}</td>
+                    <td>
+                        <button [disabled]="this.inProgress" mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button *ngIf="container.state === 'running'" mat-menu-item (click)="this.containerLogs(container)">
+                                <mat-icon style="color:rgb(223, 109, 44);">event_note</mat-icon>
+                                <span>Logs</span>
+                            </button>
+                            <button mat-menu-item (click)="this.containerInspect(container.id)">
+                                <mat-icon style="color:royalblue;">info</mat-icon>
+                                <span>Inspect</span>
+                            </button>
+                            <button mat-menu-item (click)="this.restart(container.id)">
+                                <mat-icon style="color:rgb(223, 146, 4);">restart_alt</mat-icon>
+                                <span>Restart</span>
+                            </button>
+                            <button mat-menu-item (click)="this.delete(container.id)">
+                                <mat-icon style="color:rgb(241, 51, 51);">delete</mat-icon>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                    <mat-divider></mat-divider>
+                </tr>
+            </table>
+        </mat-card-content>
+    </mat-card>
+    <mat-sidenav #inspect position="end" style="width: 70%;">
+        <div style="margin: 20px;">
+            <h2>Container Info</h2>
+            <div style="text-align: center;">
+                <div *ngIf="this.containerInfo?.Id && this.containerInfo?.State.Status === 'running'">
+                    <app-stats *ngIf="this.sidenav_inspect._animationState == 'open'"
+                        [containerid]="this.containerInfo?.Id"></app-stats>
+                </div>
+            </div>
+            <div *ngIf="this.inProgress">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            <mat-tab-group animationDuration="0ms" style="margin-top: 5px;" mat-align-tabs="center">
+                <mat-tab label="Classic">
+                    <div class="div-info">
+                        <b>Name:</b>
+                        <span class="span-info">
+                            {{this.containerInfo?.Name}}
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="div-info">
+                        <b>Command:</b>
+                        <span *ngFor="let arg of this.containerInfo?.Args;" class="span-info">
+                            {{arg}}
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="div-info">
+                        <b>Created:</b>
+                        <span class="span-info">
+                            {{this.localDateTime(this.containerInfo?.Created)}}
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="div-info">
+                        <b>HostConfig:</b>
+                        <span class="span-info">
+                            {{this.containerInfo?.HostConfig.NetworkMode}}
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="div-info">
+                        <b>Id:</b>
+                        <span class="span-info">
+                            {{this.containerInfo?.Id}}
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="div-info">
+                        <b>Image Id:</b>
+                        <span class="span-info">
+                            {{this.containerInfo?.Image}}
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="div-info">
+                        <b>Ports:</b>
+                        <span *ngFor="let ports of this.containerInfo?.NetworkSettings.Ports | keyvalue;"
+                            class="span-info">
+                            <span *ngFor="let port of ports.value;" class="span-info">
+                                {{port.HostIp}}:{{port.HostPort}}
+                            </span>
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="div-info">
+                        <b>Status:</b>
+                        <span class="span-info">
+                            {{this.containerInfo?.State.Status}}
+                        </span>
+                    </div>
+                    <mat-divider></mat-divider>
+
+                </mat-tab>
+                <mat-tab label="Json">
+                    <div style="padding: 10px; font-size: 120%">
+                        <ngx-json-viewer [json]="this.containerInfo"></ngx-json-viewer>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </mat-sidenav>
+</mat-sidenav-container>

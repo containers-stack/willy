@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+package-lock.json
 # Distribution / packaging
 .Python
 build/
@@ -128,6 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .vscode/launch.json
-.vscode/launch.json
 
 .vscode/
+.idea/
+venv/
+client/package-lock.json
+__pycache__/

@@ -1,12 +1,20 @@
-# Logza.io
-Simple web interface for docker container
+**Willy** is a web service that can be used to manage Docker. The application allows you to manage all your orchestrator resources (containers, images, volumes, networks and more) through a GUI.
 
-### Clone
-git clone https://github.com/moti-malka/Logza.io.git
+Willy consists of a single container that can run on any cluster. It can be deployed as a Linux container or a Windows native container.
 
-### Install 
-``pip install -r ./requirements.txt``
+**Important** Willy build and design for development environment.
 
-### Run 
-``./env/bin/python run.py``
+## Latest Version
 
+Willy is updated every period according to the constraints and time that the developers have.
+
+## Getting started
+To use Willy just run :
+```docker run -d -p 80:5000 -v /var/run/docker.sock:/var/run/docker.sock  willy ```
+
+## Getting help
+Willy  is an open source project and is supported by the community. You can open bugs or issues on this repository for support
+
+## Work with us
+
+If you are a developer, and our code in this repo makes sense to you, we would love to hear from you. We are always on the hunt for awesome devs, either freelance or employed. Drop us a line to moti.malka25@gmail.com with your details.

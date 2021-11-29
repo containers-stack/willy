@@ -1,0 +1,8 @@
+# B"H
+.git/
+.github/
+.vscode/
+.idea/
+__pycache__/
+client/node_modules/
+client/dist/
