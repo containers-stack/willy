@@ -1,5 +1,5 @@
 
-<p align="center">
+<p align="center" style="width:50%">
   <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/1.png' />
   <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/2.png' />
   <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/3.png' />
