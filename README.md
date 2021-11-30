@@ -1,5 +1,6 @@
 
-![alt text](https://github.com/moti-malka/Willy/blob/main/Screenshot from 2021-11-30 21-08-04.png?raw=true)
+![alt text](https://github.com/moti-malka/Willy/main/images/2021-11-30 21-08-04.png?raw=true)
+![Alt text](relative/path/to/img.jpg?raw=true "Title")
 
 **Willy** is a web service that can be used to manage Docker. The application allows you to manage all your orchestrator resources (containers, images, volumes, networks and more) through a GUI.
 
