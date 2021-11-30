@@ -1,11 +1,11 @@
 
 <p align="center">
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/main/images/Screenshot/1.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/main/images/Screenshot/2.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/main/images/Screenshot/3.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/main/images/Screenshot/4.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/main/images/Screenshot/5.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/main/images/Screenshot/6.png' />
+  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/1.png' />
+  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/2.png' />
+  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/3.png' />
+  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/4.png' />
+  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/5.png' />
+  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/6.png' />
 </p>
 
 
