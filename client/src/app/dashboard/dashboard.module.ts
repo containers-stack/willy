@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutes } from './dashboard.routing';
 import { ChartistModule } from 'ng-chartist';
+import { SummaryComponent } from './summary/summary.component';
 
 
 @NgModule({
@@ -16,6 +17,6 @@ import { ChartistModule } from 'ng-chartist';
     ChartistModule,
     RouterModule.forChild(DashboardRoutes)
   ],
-  declarations: [DashboardComponent]
+  declarations: [DashboardComponent, SummaryComponent]
 })
 export class DashboardModule {}
