@@ -33,7 +33,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 	private isActive = true;
 
 	constructor(private http: HttpClient,
-		private notifierService: NotifierService) { }
+				private notifierService: NotifierService) { }
 
 
 	ngAfterViewInit() {

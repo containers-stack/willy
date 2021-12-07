@@ -6,40 +6,46 @@ import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-summary',
-  templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.css']
+  selector: 'app-events',
+  templateUrl: './events.component.html',
+  styleUrls: ['./events.component.css']
 })
-export class SummaryComponent implements OnInit {
+export class EventsComponent implements OnInit {
 
   constructor(private http: HttpClient,
               private notifierService: NotifierService) { }
 
-  public systemInfo: any;
+
+  
+  public events: [] = [];
 
   private apiURL = environment.apiURL;
 
   ngOnInit(): void {
-
     const source = interval(5000);
     source.pipe()
       .subscribe(() => {
-        this.getSummary()
-          .subscribe((summary: any) => {
-            this.systemInfo = summary
+        this.getevents()
+          .subscribe((events: any) => {
+            this.events = events
           })
       })
   }
 
-  getSummary() {
-    return this.http.get<any>(this.apiURL + '/info/summary')
+  getevents() {
+    return this.http.get<any>(this.apiURL + '/info/events')
       .pipe(
         catchError((error: any) => {
           console.log(error)
-          this.notifierService.notify('error', `Failed to get system summary: ${error.error}`)
+          this.notifierService.notify('error', `Failed to get events: ${error.error}`)
           return throwError(error)
         })
       )
   }
+
+  localDateTime(dateNumber: string): string {
+    debugger
+		return new Date(dateNumber).toLocaleString()
+	  }
 
 }
