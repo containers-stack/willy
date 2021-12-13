@@ -8,6 +8,7 @@ export interface Contributors {
   discription: string;
   linkdin: string;
   github: string;
+  stackoverflow: string
 }
 
 @Component({
@@ -31,12 +32,13 @@ export class AboutUsComponent implements OnInit {
       },
      {
         "name": "Shmuel Raichman",
-        "email": "moti.malka25@gmail.com",
+        "email": "dev@raichman.io",
         "discription": "DevOps Engineer",
         "img": "https://media-exp1.licdn.com/dms/image/C4E03AQG5ByGIjmPZYg/profile-displayphoto-shrink_800_800/0/1597911407092?e=1643241600&v=beta&t=XUF603O7hfMswZY56lZY5tBo4z7u4RGNoQYFMOT1-tk",
         "follow": "https://github.com/shmuel-raichman",
         "linkdin": "https://www.linkedin.com/in/shmuel-raichman/",
-        "github": "https://github.com/shmuel-raichman"
+        "github": "https://github.com/shmuel-raichman",
+        "stackoverflow": "https://stackoverflow.com/users/9202256/shmuel"
       }
 
   ]
