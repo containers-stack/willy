@@ -6,6 +6,7 @@ from flask import Flask, jsonify, render_template ,send_from_directory
 from flask_socketio import SocketIO
 from flask_cors import CORS
 
+
 # Define the WSGI application object
 app = Flask(__name__, static_folder='./')
 CORS(app)
@@ -16,7 +17,11 @@ app.config.from_object('config')
 socketio = SocketIO(app, cors_allowed_origins="*", host='0.0.0.0')
 
 # Create low-level client for the Docker Engine API.
-docker_client = docker.APIClient(base_url='unix://var/run/docker.sock')
+try:
+  docker_client = docker.APIClient(base_url='unix://var/run/docker.sock')
+except docker.errors.DockerException as err:
+    print("\x1b[31;21m {0} \x1b[0m \nCould not connect to docker api make sure docker socket is mounted.\ntry running with: -v /var/run/docker.sock:/var/run/docker.sock".format(str(err)))
+    exit(4)
 
 # Serve client static files
 @app.route('/<path:path>', methods=['GET'])
