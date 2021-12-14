@@ -54,7 +54,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
     outputs:
-      tags: "${{branch}}-${{ steps.date.outputs.date }}, ${{branch}}-${{sha}}"
+      tags: "${{ github.ref }}-${{ steps.date.outputs.date }}, ${{ github.ref }}-${{ github.sha }}"
 
 
   release:
