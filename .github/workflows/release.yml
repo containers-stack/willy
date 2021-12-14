@@ -41,8 +41,8 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
-            type=raw,value={{branch}}-{{sha}}
-            type=raw, value={{branch}}-${{ steps.date.outputs.date }}
+            type=raw,value={{ ref }}-{{ sha }}
+            type=raw, value={{ ref }}-${{ steps.date.outputs.date }}
 
 
       - name: Build and push Docker image
