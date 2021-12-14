@@ -88,6 +88,6 @@ jobs:
             - ${{ github.event.head_commit.message }}
             - "Dockerhub tags: 
               ${{ needs.build-and-push-image.outputs.tags }}
-              docker pull ${{ secrets.DOCKERHUB_USER }}/tag_name"
+              docker pull ${{ secrets.DOCKERHUB_USER }}/{{ tag }}"
           draft: false
           prerelease: false
