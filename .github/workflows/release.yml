@@ -31,28 +31,29 @@ jobs:
         with:
           # registry: ${{ env.REGISTRY }}
           username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%y%m%d-%H-%M-%S')"
 
       - name: Get Tag Name
-        id: tag_name
+        id: push_path
         run: |
           echo "$(echo $GITHUB_REF | cut -d / -f 3)"
           echo "::set-output name=tag_name::$(echo $GITHUB_REF | cut -d / -f 3)"
+          echo "::set-output name=repo_name::$(echo $IMAGE_NAME | cut -d / -f 2)"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ secrets.DOCKERHUB_USER }}/${{ env.IMAGE_NAME }}
+          images: ${{ secrets.DOCKERHUB_USER }}/${{ steps.push_path.outputs.repo_name }}
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
-            type=raw,value=${{ steps.tag_name.outputs.tag_name }}-{{ sha }}
-            type=raw, value=${{ steps.tag_name.outputs.tag_name }}-${{ steps.date.outputs.date }}
+            type=raw,value=${{ steps.push_path.outputs.tag_name }}-{{ sha }}
+            type=raw, value=${{ steps.push_path.outputs.tag_name }}-${{ steps.date.outputs.date }}
 
 
       - name: Build and push Docker image
@@ -64,7 +65,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
     outputs:
-      tags: "${{ steps.tag_name.outputs.tag_name }}-${{ steps.date.outputs.date }}, ${{ steps.tag_name.outputs.tag_name }}-${{ github.sha }}"
+      tags: "${{ steps.push_path.outputs.tag_name }}-${{ steps.date.outputs.date }}, ${{ steps.push_path.outputs.tag_name }}-${{ github.sha }}"
 
 
   release:
