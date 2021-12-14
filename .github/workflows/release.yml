@@ -37,6 +37,10 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%y%m%d-%H-%M-%S')"
 
+      - name: Debug brnach and tag
+        id: tagandbranch
+        run: echo env.GITHUB_REF_NAME
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
