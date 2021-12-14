@@ -19,6 +19,12 @@ jobs:
       packages: write
 
     steps:
+
+      - name: Get tag name
+        id: tag_name 
+        run: |
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -41,8 +47,8 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
-            type=raw,value=${{ github.ref }}-{{ sha }}
-            type=raw, value=${{ github.ref }}-${{ steps.date.outputs.date }}
+            type=raw,value=${{ steps.tag_name.output.SOURCE_TAG }}-{{ sha }}
+            type=raw, value=${{ steps.tag_name.output.SOURCE_TAG }}-${{ steps.date.outputs.date }}
 
 
       - name: Build and push Docker image
@@ -54,7 +60,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
     outputs:
-      tags: "${{ github.ref }}-${{ steps.date.outputs.date }}, ${{ github.ref }}-${{ github.sha }}"
+      tags: "${{ steps.tag_name.output.SOURCE_TAG }}-${{ steps.date.outputs.date }}, ${{ steps.tag_name.output.SOURCE_TAG }}-${{ github.sha }}"
 
 
   release:
