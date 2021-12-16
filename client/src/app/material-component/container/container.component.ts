@@ -144,7 +144,7 @@ export class ContainerComponent implements OnInit , OnDestroy{
 
       },
         (error: any) => {
-          debugger
+          
           this.notifierService.notify('error', `Failed to stop container: ${error.error}`)
           this.inProgress = false;
         })

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { interval, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -8,12 +9,13 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.css']
+  styleUrls: ['./summary.component.scss']
 })
 export class SummaryComponent implements OnInit {
 
   constructor(private http: HttpClient,
-              private notifierService: NotifierService) { }
+              private notifierService: NotifierService,
+              private router: Router) { }
 
   public systemInfo: any;
 
@@ -40,6 +42,12 @@ export class SummaryComponent implements OnInit {
           return throwError(error)
         })
       )
+  }
+
+  navigate(path: string){
+
+    this.router.navigateByUrl(`/${path}`)
+
   }
 
 }
