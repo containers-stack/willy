@@ -6,6 +6,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutes } from './dashboard.routing';
 import { ChartistModule } from 'ng-chartist';
+import { SummaryComponent } from './summary/summary.component';
+import { EventsComponent } from './events/events.component';
+import { ContainersPieComponent } from './containers-pie/containers-pie.component';
 
 
 @NgModule({
@@ -16,6 +19,6 @@ import { ChartistModule } from 'ng-chartist';
     ChartistModule,
     RouterModule.forChild(DashboardRoutes)
   ],
-  declarations: [DashboardComponent]
+  declarations: [DashboardComponent, SummaryComponent, EventsComponent, ContainersPieComponent]
 })
 export class DashboardModule {}

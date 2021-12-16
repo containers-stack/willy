@@ -16,6 +16,46 @@ from api.mod_dashboard.models import Dashboard, DashboardEncoder, Event
 mod_dashboard = Blueprint('dashboard', __name__, url_prefix='/info')
 
 
+
+@mod_dashboard.route('/summary', methods=['GET'])
+def summary():
+    
+    try:
+        system_info = Sdk.docker_client.info()
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to get system info {err.explanation}')
+       return str(err.explanation), 500 
+    except Exception as e:
+        app.logger.error(f'Failed to get system info {str(e)}')
+        return str(e), 500
+    return system_info
+
+@mod_dashboard.route('/events', methods=['GET'])
+def events():
+    
+    try:
+        until = datetime.datetime.utcnow() - datetime.timedelta(seconds=5)
+
+        since = datetime.datetime.utcnow() - datetime.timedelta(minutes=60)
+        
+        container_events = []
+        
+        all_events = Sdk.docker_client.events(since=since, until=until, decode=True)
+
+        for event in all_events:
+            if event['Type'] == 'container' and 'id' in event:
+                container_events.append(event)
+
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to get system info {err.explanation}')
+       return str(err.explanation), 500 
+    
+    except Exception as e:
+        app.logger.error(f'Failed to get system info {str(e)}')
+        return str(e), 500
+    
+    return flask.jsonify(container_events)
+
 @mod_dashboard.route('/', methods=['GET'])
 def api_dashboard():
 

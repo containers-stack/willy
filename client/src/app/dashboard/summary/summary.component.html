@@ -1,0 +1,34 @@
+<mat-grid-list cols="4" rowHeight="5:2">
+    <mat-grid-tile>
+      <mat-card class="card one">
+        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+          <div style="font-weight: bold;">{{this.systemInfo?.Containers}}</div>
+          <span>Containers</span>
+        </mat-card-title>
+      </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-card class="card tow">
+        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+          <div style="font-weight: bold;">{{this.systemInfo?.Images}}</div>
+          <span>Images</span>
+        </mat-card-title>
+      </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-card class="card tree">
+        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+          <div style="font-weight: bold;">{{this.systemInfo?.Plugins.Volume.length}}</div>
+          <span>Volumes</span>
+        </mat-card-title>
+      </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-card class="card four">
+        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+          <div style="font-weight: bold;">{{this.systemInfo?.Plugins.Network.length}}</div>
+          <span>Networking</span>
+        </mat-card-title>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
