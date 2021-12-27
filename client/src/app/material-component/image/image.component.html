@@ -13,6 +13,14 @@
                             {{option}}s
                         </mat-option>
                     </mat-select>
+                    <button mat-icon-button color="accent" style="margin-left: 20px;" mat-button [matMenuTriggerFor]="menu">
+                        <mat-icon>menu</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                            <button (click)="OpenPullDialog()" mat-menu-item>
+                                Pull
+                            </button>
+                    </mat-menu>
                 </div>
             </mat-card-title>
             <div *ngIf="this.images?.length == 0" style="text-align: center; padding-top: 5%;">

@@ -4,6 +4,7 @@ import docker
 from flask import Blueprint, app, request, abort
 import flask
 from marshmallow import Schema, fields
+from marshmallow.decorators import validates
 
 from api.mod_images.basic_ops import *
 from api.mod_images.models import ImageEncoder
@@ -74,6 +75,25 @@ def api_image_history():
         return str(e), 500
 
     return flask.jsonify(history), 200
+
+@mod_image.route('/pull', methods=['GET'])
+def api_pull_image():
+    repo = request.args.get('repo')
+    tag = request.args.get('tag')
+
+    # Validate request parameter
+    if repo == '' or tag == '':
+        return 'image repo and tag must be supplied', 404
+    try:
+        pull = pull_image(repo=repo, tag=tag)
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to pull image {err.explanation}')
+       return str(err.explanation), 500 
+    except Exception as e:
+        app.logger.error(f'Failed to pull image {str(e)}')
+        return str(e), 500
+
+    return flask.jsonify(pull), 200
 
 # api_remove_image start image by id
 @mod_image.route('/remove', methods=['DELETE'])

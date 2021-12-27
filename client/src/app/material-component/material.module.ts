@@ -42,6 +42,7 @@ import { StatsComponent } from './container/stats/stats.component';
 import { environment } from 'src/environments/environment';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { ImageComponent } from './image/image.component';
+import { PullDialogComponent } from '../shared/component/pull-dialog/pull-dialog.component';
 
 const socetConfig: SocketIoConfig = { url: environment.apiURL , options: {
   transports: ["polling", 'websocket']
@@ -88,7 +89,8 @@ const socetConfig: SocketIoConfig = { url: environment.apiURL , options: {
     LogComponent,
     StatsComponent,
     AboutUsComponent,
-    ImageComponent
+    ImageComponent,
+    PullDialogComponent
   ]
 })
 export class MaterialComponentsModule {}

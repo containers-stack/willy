@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { Observable } from 'rxjs';
+import { PullDialogComponent } from 'src/app/shared/component/pull-dialog/pull-dialog.component';
 import { ImageService } from './image.service';
 
 @Component({
@@ -32,7 +34,8 @@ export class ImageComponent implements OnInit {
 
   constructor(private _imageSvc: ImageService,
     private notifierService: NotifierService,
-    private _router: Router) { }
+    private _router: Router,
+    public dialog: MatDialog) { }
 
 
   ngOnDestroy(): void {
@@ -141,6 +144,10 @@ export class ImageComponent implements OnInit {
 
   onrefreshSecondsChange(event: any): void {
     this.refreshInterval = event.value;
+  }
+
+  OpenPullDialog() {
+    this.dialog.open(PullDialogComponent, {disableClose: true});
   }
 
 }

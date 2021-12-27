@@ -38,6 +38,11 @@ def image_history(image_id):
     app.logger.info(f'image history:{image_id}')
     return Sdk.docker_client.history(image=image_id)
 
+# pull image
+def pull_image(repo, tag,):
+    app.logger.info(f'pull image:{repo}:{tag}')
+    return Sdk.docker_client.pull(repository=repo, tag=tag, all_tags=False)
+
 # list all images
 def list_images():
     images = []
