@@ -1,85 +1,28 @@
-<mat-grid-list cols="4" rowHeight="5:2">
-  <mat-grid-tile>
-    <mat-card class="card one">
-      <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-        <div style="font-weight: bold;">{{this.dashboard?.containers}}</div>
-        <span>Containers</span>
-      </mat-card-title>
-    </mat-card>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <mat-card class="card tow">
-      <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-        <div style="font-weight: bold;">{{this.dashboard?.images}}</div>
-        <span>Images</span>
-      </mat-card-title>
-    </mat-card>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <mat-card class="card tree">
-      <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-        <div style="font-weight: bold;">{{this.dashboard?.vol}}</div>
-        <span>Volumes</span>
-      </mat-card-title>
-    </mat-card>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <mat-card class="card four">
-      <mat-card-title style="margin-left: 20px;margin-top: 10px;">
-        <div style="font-weight: bold;">{{this.dashboard?.net}}</div>
-        <span>Networking</span>
-      </mat-card-title>
-    </mat-card>
-  </mat-grid-tile>
-</mat-grid-list>
-<mat-grid-list cols="3" rowHeight="500px">
-  <mat-grid-tile>
-    <div style="height:34vh; width:20vw;">
-      <canvas id="containersInfo"></canvas>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile colspan=2>
-      <mat-card style="width: 100%;">
-        <mat-card-title style="padding: 1px 0 0 30px;">
-          <h4>
-            Containers Events
-          </h4>
-        </mat-card-title>
-        <mat-card-content style="margin-left: 10px;">
-          <div style="width:100%; height:300px; overflow:auto;">
-            <table class="styled-table">
-              <thead>
-                <tr>
-                <th>Name</th>
-                <th>Id</th>
-                <th>Time</th>
-                <th>From</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let event of this.dashboard?.events">
-                <td>{{event.eventContainerName}}</td>
-                <td>{{event.eventContainerId.substring(0,12)}}</td>
-                <td>{{event.eventTime}}</td>
-                <td>{{event.eventFrom}}</td>
-                <td>{{event.eventAction}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        </mat-card-content>
-      </mat-card>
-  </mat-grid-tile>
-</mat-grid-list>
+<div *ngIf="!this.dashboard">
+  <mat-spinner style="margin:0 auto;"></mat-spinner>
+</div>
+<div [hidden]="!this.dashboard">
+  <app-summary></app-summary>
+  <mat-grid-list cols="3" rowHeight="500px">
+    <mat-grid-tile>
+      <div style="height:34vh; width:20vw;">
+        <canvas id="containersInfo"></canvas>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan=2>
+      <app-events style="width: 94%;"></app-events>
+    </mat-grid-tile>
+  </mat-grid-list>
 
-<mat-card style="margin-top: 1%;">
-  <mat-card-title style="padding: 10px 0 0 26px;">
-    <h4>
-      Running Containers
-    </h4>
-  </mat-card-title>
-  <mat-card-content style="margin-left: 10px;">
-    <canvas id="runingContainers" width="100" height="30"></canvas>
-  </mat-card-content>
-</mat-card>
+
+  <mat-card style="margin-top: 1%; width: 98.2%;">
+    <mat-card-title style="padding: 10px 0 0 26px;">
+      <h4>
+        Host Memory Usage (MB)
+      </h4>
+    </mat-card-title>
+    <mat-card-content style="margin-left: 10px;">
+      <canvas id="memoryUsage" width="100" height="20"></canvas>
+    </mat-card-content>
+  </mat-card>
+</div>

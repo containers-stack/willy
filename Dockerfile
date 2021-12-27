@@ -1,30 +1,35 @@
-# Build angular client
-FROM node:14 as client
+# BUILD APP
+FROM node:14 as build-client
 
-WORKDIR /build
 
-COPY client/package.json .
+WORKDIR /usr/local/app
+
+
+COPY ./client /usr/local/app/
+
 RUN npm install
 
-COPY client/ .
 RUN npm run build
 
-# Build runtime image
+
+# BUILD API
 FROM python:3.8-slim-bullseye
 
 WORKDIR /app
 
-# Install python requirements
-COPY requirements.txt .
+COPY ./backend/requirements.txt .
+
 RUN pip install -r requirements.txt
 
-# COPY the python app *also copies angular files before build
-COPY . .
+COPY ./backend .
 
-# Copy the built angular files
-COPY --from=client /build/dist/ /app/static
+ENV PORT=5000
 
-ENV PORT=3000
-EXPOSE 3000
+EXPOSE 5000
 
-CMD ["python", "app.py"]
+COPY --from=build-client /usr/local/app/dist/ ./static
+
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["sh", "entrypoint.sh"]
+
