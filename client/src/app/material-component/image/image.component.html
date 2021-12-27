@@ -28,7 +28,7 @@
                 <tr *ngFor="let image of this.images;">
                     <td>
                         <button style="font-size: 18px;" (click)="this.imageInspect(image.id)" mat-button color="primary">
-                            {{this.images[0].id.split("sha256:")[1].substring(0,12)}}
+                            {{image.id.split("sha256:")[1].substring(0,12)}}
                         </button>
                     </td>
                     <td>{{image.repo}}</td>
@@ -66,6 +66,20 @@
                 <mat-tab label="Json">
                     <div style="padding: 10px; font-size: 120%">
                         <ngx-json-viewer [json]="this.imageInfo"></ngx-json-viewer>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Layers">
+                    <div style="padding: 10px;">
+                        <div style="margin: 15px;" *ngFor="let command of this.imageHistory;let i = index">
+                            <div *ngIf="this.imageHistory[this.imageHistory.length - i - 1].CreatedBy.includes('#(nop)')">
+                                <span>{{this.imageHistory[this.imageHistory.length - i - 1].CreatedBy.split('/bin/sh -c #(nop)')[1]}}</span>
+                                <mat-divider></mat-divider>
+                            </div>
+                            <div *ngIf="this.imageHistory[this.imageHistory.length - i - 1].CreatedBy.includes('#(nop)') === false">
+                                <span>{{this.imageHistory[this.imageHistory.length - i - 1].CreatedBy}}</span>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </div>
                     </div>
                 </mat-tab>
             </mat-tab-group>

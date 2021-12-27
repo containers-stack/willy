@@ -26,6 +26,8 @@ export class ImageComponent implements OnInit {
 
   public imageInfo: any;
 
+  public imageHistory: any;
+
   @ViewChild('inspect') public sidenav_inspect: MatSidenav | undefined;
 
   constructor(private _imageSvc: ImageService,
@@ -93,13 +95,23 @@ export class ImageComponent implements OnInit {
         (response: any) => {
           this.imageInfo = response;
           this.inProgress = false;
-          this.sidenav_inspect?.open()
-          return this.imageInfo;
         },
         (error: any) => {
           this.notifierService.notify('error', `Failed to inspect image: ${error.error}`)
           this.inProgress = false;
         })
+    
+        this._imageSvc.history(id)
+        .subscribe(
+          (response: any) => {
+            this.imageHistory = response;
+            this.inProgress = false;
+            this.sidenav_inspect?.open()
+          },
+          (error: any) => {
+            this.notifierService.notify('error', `Failed to get image history: ${error.error}`)
+            this.inProgress = false;
+          })
   }
 
   delete(id: string): void {

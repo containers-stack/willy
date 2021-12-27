@@ -56,6 +56,25 @@ def api_inspect_image():
 
     return image_instance, 200
 
+@mod_image.route('/history', methods=['GET'])
+def api_image_history():
+    image_id = request.args.get('id')
+
+    # Validate request parameter
+    errors = schema_instance.validate(request.args)
+    if errors:
+        return 'image id must be supplied', 404
+    try:
+        history = image_history(image_id)
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to get image history {err.explanation}')
+       return str(err.explanation), 500 
+    except Exception as e:
+        app.logger.error(f'Failed to get image history {str(e)}')
+        return str(e), 500
+
+    return flask.jsonify(history), 200
+
 # api_remove_image start image by id
 @mod_image.route('/remove', methods=['DELETE'])
 def api_remove_image():

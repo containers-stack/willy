@@ -31,8 +31,12 @@ def remove_image(image_id, volume=False, link=False, force=True):
 # inspect image
 def inspect_image(image_id):
     app.logger.info(f'inspect image:{image_id}')
-    history = Sdk.docker_client.history(image=image_id)
     return Sdk.docker_client.inspect_image(image_id)
+
+# image history
+def image_history(image_id):
+    app.logger.info(f'image history:{image_id}')
+    return Sdk.docker_client.history(image=image_id)
 
 # list all images
 def list_images():

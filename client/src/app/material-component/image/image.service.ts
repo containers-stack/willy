@@ -53,6 +53,17 @@ export class ImageService{
     )
   }
 
+  // HttpClient API get() method => Fetch image history
+  history(id: string): Observable<any> {
+    return this.http.get<any>(this.apiURL + '/images/history?id=' + id)
+    .pipe(
+      catchError((err) =>{
+        console.log(err)
+        return throwError(err)
+      })
+    )
+  }
+
   // HttpClient API delete() method => Delete Image
   delete(id: string) {
     return this.http.delete<any>(this.apiURL + '/images/remove?id=' + id, this.httpOptions)
