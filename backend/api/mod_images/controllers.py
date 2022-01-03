@@ -82,7 +82,7 @@ def api_pull_image():
     tag = request.args.get('tag')
 
     # Validate request parameter
-    if repo == '' or tag == '':
+    if repo == '':
         return 'image repo and tag must be supplied', 404
     try:
         pull = pull_image(repo=repo, tag=tag)
@@ -94,6 +94,24 @@ def api_pull_image():
         return str(e), 500
 
     return flask.jsonify(pull), 200
+
+@mod_image.route('/search', methods=['GET'])
+def api_search_image():
+    img = request.args.get('img')
+
+    # Validate request parameter
+    if img == '':
+        return 'Please enter image to search', 404
+    try:
+        img = search_image(img=img)
+    except docker.errors.APIError as err:
+       app.logger.error(f'Failed to search image {err.explanation}')
+       return str(err.explanation), 500 
+    except Exception as e:
+        app.logger.error(f'Failed to search image {str(e)}')
+        return str(e), 500
+
+    return flask.jsonify(img), 200
 
 # api_remove_image start image by id
 @mod_image.route('/remove', methods=['DELETE'])

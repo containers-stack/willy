@@ -10,7 +10,7 @@ import { ImageService } from 'src/app/material-component/image/image.service';
 export class PullDialogComponent {
 
   constructor(private _imageSvc: ImageService,
-    private notifierService: NotifierService,) { }
+    private notifierService: NotifierService) { }
 
   public repo: any;
 

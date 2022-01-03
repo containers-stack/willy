@@ -43,6 +43,11 @@ def pull_image(repo, tag,):
     app.logger.info(f'pull image:{repo}:{tag}')
     return Sdk.docker_client.pull(repository=repo, tag=tag, all_tags=False)
 
+# pull image
+def search_image(img):
+    app.logger.info(f'search image:{img}')
+    return Sdk.docker_client.search(term=img, limit=100)
+
 # list all images
 def list_images():
     images = []
@@ -57,5 +62,4 @@ def list_images():
                                 repo=image_inspect.get('RepoTags')[0].split(':')[0],
                                 size=image_inspect.get('Size'))
                             )
-
     return images

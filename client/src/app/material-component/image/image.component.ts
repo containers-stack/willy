@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { Observable } from 'rxjs';
 import { PullDialogComponent } from 'src/app/shared/component/pull-dialog/pull-dialog.component';
+import { SearchImageComponent } from 'src/app/shared/component/search-image/search-image.component';
 import { ImageService } from './image.service';
 
 @Component({
@@ -148,6 +149,10 @@ export class ImageComponent implements OnInit {
 
   OpenPullDialog() {
     this.dialog.open(PullDialogComponent, {disableClose: true});
+  }
+
+  OpenSearchDialog() {
+    this.dialog.open(SearchImageComponent, {disableClose: true});
   }
 
 }
