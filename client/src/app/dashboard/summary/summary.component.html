@@ -1,6 +1,6 @@
 <mat-grid-list cols="4" rowHeight="5:2">
     <mat-grid-tile>
-      <mat-card class="card one">
+      <mat-card (click)="navigate('container')" class="card one">
         <mat-card-title style="margin-left: 20px;margin-top: 10px;">
           <div style="font-weight: bold;">{{this.systemInfo?.Containers}}</div>
           <span>Containers</span>

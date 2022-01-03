@@ -41,6 +41,9 @@ import { LogComponent } from './container/log/log.component';
 import { StatsComponent } from './container/stats/stats.component';
 import { environment } from 'src/environments/environment';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { ImageComponent } from './image/image.component';
+import { PullDialogComponent } from '../shared/component/pull-dialog/pull-dialog.component';
+import { SearchImageComponent } from '../shared/component/search-image/search-image.component';
 
 const socetConfig: SocketIoConfig = { url: environment.apiURL , options: {
   transports: ["polling", 'websocket']
@@ -86,7 +89,10 @@ const socetConfig: SocketIoConfig = { url: environment.apiURL , options: {
     HighlightSearchPipe,
     LogComponent,
     StatsComponent,
-    AboutUsComponent
+    AboutUsComponent,
+    ImageComponent,
+    PullDialogComponent,
+    SearchImageComponent
   ]
 })
 export class MaterialComponentsModule {}

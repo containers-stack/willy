@@ -4,6 +4,7 @@ import { NotifierService } from 'angular-notifier';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import Chart from 'chart.js/auto'
 
 @Component({
   selector: 'app-containers-pie',
@@ -13,8 +14,6 @@ import { environment } from 'src/environments/environment';
 export class ContainersPieComponent implements OnInit {
 
   private apiURL = environment.apiURL;
-	
-	private ctxContainersInfo = 'containersInfo';
 	
 	public containersInfoChart: Chart | undefined;
   

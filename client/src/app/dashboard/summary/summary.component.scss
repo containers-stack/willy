@@ -5,6 +5,14 @@
     border: 1px solid #c8ced3;
     border-radius: 0.25rem;
     color: white;
+
+    &:hover {
+        border: 1px solid #00838d;
+        box-shadow: 0px 0px 999px 999px rgba(255, 255, 255, 0.5);
+        z-index: 500;
+        cursor: pointer;
+        
+      }
     
 }
 

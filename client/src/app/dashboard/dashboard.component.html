@@ -3,26 +3,32 @@
 </div>
 <div [hidden]="!this.dashboard">
   <app-summary></app-summary>
-  <mat-grid-list cols="3" rowHeight="500px">
-    <mat-grid-tile>
-      <div style="height:34vh; width:20vw;">
-        <canvas id="containersInfo"></canvas>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile colspan=2>
-      <app-events style="width: 94%;"></app-events>
-    </mat-grid-tile>
-  </mat-grid-list>
-
-
-  <mat-card style="margin-top: 1%; width: 98.2%;">
-    <mat-card-title style="padding: 10px 0 0 26px;">
-      <h4>
-        Host Memory Usage (MB)
-      </h4>
-    </mat-card-title>
-    <mat-card-content style="margin-left: 10px;">
-      <canvas id="memoryUsage" width="100" height="20"></canvas>
-    </mat-card-content>
-  </mat-card>
+  <div style="text-align: center; margin-top: 5%;" [hidden]="this.dashboard?.containers > 0">
+    <div>
+      <img style="width: 25%;" src="../../assets/images/empty.svg">
+      <h3>No runners containers found</h3>
+    </div>
+  </div>
+  <div [hidden]="this.dashboard?.containers == 0">
+    <mat-grid-list cols="3" rowHeight="500px">
+      <mat-grid-tile>
+        <div style="height:34vh; width:20vw;">
+          <canvas id="containersInfo"></canvas>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=2>
+        <app-events style="width: 94%;"></app-events>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-card style="margin-top: 1%; width: 98.2%;">
+      <mat-card-title style="padding: 10px 0 0 26px;">
+        <h4>
+          Host Memory Usage (MB)
+        </h4>
+      </mat-card-title>
+      <mat-card-content style="margin-left: 10px;">
+        <canvas id="memoryUsage" width="100" height="20"></canvas>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

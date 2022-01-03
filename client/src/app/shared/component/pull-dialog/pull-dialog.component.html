@@ -1,0 +1,12 @@
+<mat-progress-bar *ngIf="this.inProgress" mode="indeterminate"></mat-progress-bar>
+<h4>Pull Image</h4>
+<mat-form-field appearance="fill">
+    <mat-label>Image Repository</mat-label>
+    <input [disabled]="this.inProgress" matInput type="text" [(ngModel)]="repo">
+</mat-form-field>
+<mat-form-field appearance="fill">
+    <mat-label>Image Tag</mat-label>
+    <input [disabled]="this.inProgress" matInput type="text" [(ngModel)]="tag">
+</mat-form-field>
+<button [disabled]="this.inProgress" style="float: right;" mat-flat-button color="primary" (click)="pull()">Pull</button>
+<button [disabled]="this.inProgress" mat-flat-button color="warn" [mat-dialog-close]="true">Close</button>
