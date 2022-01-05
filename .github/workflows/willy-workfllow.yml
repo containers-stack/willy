@@ -14,12 +14,16 @@ jobs:
     
     steps:
     
+    - uses: actions/checkout@v2
+    
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag motiio/willy:$(date +%s)
+    
     - name: Docker Login
       uses: docker/login-action@v1.12.0
       with:
        username: ${{secrets.DOCKERHUB_USER}}
        password: ${{secrets.DOCKERHUB_TOKEN}}
-    
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag motiio/willy:$(date +%s)
+
+    - name: Push docker image
+      run: docker push motiio/willy:$(date +%s)
