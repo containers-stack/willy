@@ -1,9 +1,8 @@
-<mat-progress-bar *ngIf="this.inProgress" mode="indeterminate"></mat-progress-bar>
 <h4>Search Image</h4>
 <form class="example-form">
     <mat-form-field class="example-full-width" appearance="fill">
       <mat-label>Image</mat-label>
-      <input [disabled]="this.inProgress" type="text"
+      <input type="text"
              placeholder="Search image on docker hub"
              aria-label="Number"
              matInput
@@ -17,5 +16,5 @@
       </mat-autocomplete>
     </mat-form-field>
   </form>
-<button [disabled]="this.inProgress" style="float: right;" mat-flat-button color="primary" (click)="pull()">Pull</button>
-<button [disabled]="this.inProgress"  mat-flat-button color="warn" [mat-dialog-close]="true">Close</button>
+<button  style="float: right;" mat-flat-button color="primary" (click)="pull()">Pull</button>
+<button   mat-flat-button color="warn" [mat-dialog-close]="true">Close</button>

@@ -21,13 +21,17 @@ export class EventsComponent implements OnInit {
 
   private apiURL = environment.apiURL;
 
+  public inProgress = false;
+
   ngOnInit(): void {
     const source = interval(5000);
+    this.inProgress = true;
     source.pipe()
       .subscribe(() => {
         this.getevents()
           .subscribe((events: any) => {
             this.events = events
+            this.inProgress = false;
           })
       })
   }

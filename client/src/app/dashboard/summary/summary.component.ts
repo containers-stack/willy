@@ -21,6 +21,8 @@ export class SummaryComponent implements OnInit {
 
   private apiURL = environment.apiURL;
 
+  public inProgress = true;
+
   ngOnInit(): void {
 
     const source = interval(5000);
@@ -29,6 +31,7 @@ export class SummaryComponent implements OnInit {
         this.getSummary()
           .subscribe((summary: any) => {
             this.systemInfo = summary
+            this.inProgress = false;
           })
       })
   }
