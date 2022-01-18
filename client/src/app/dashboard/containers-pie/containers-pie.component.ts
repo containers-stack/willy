@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NotifierService } from 'angular-notifier';
+import { Chart } from 'chart.js';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -13,11 +14,9 @@ import { environment } from 'src/environments/environment';
 export class ContainersPieComponent implements OnInit {
 
   private apiURL = environment.apiURL;
-	
+
 	private ctxContainersInfo = 'containersInfo';
-	
-	public containersInfoChart: Chart | undefined;
-  
+
   constructor(private http: HttpClient,
               private notifierService: NotifierService) { }
 
@@ -35,6 +34,6 @@ export class ContainersPieComponent implements OnInit {
         })
       )
   }
-  
+
 
 }

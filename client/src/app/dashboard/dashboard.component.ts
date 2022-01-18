@@ -3,185 +3,180 @@ import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { NotifierService } from 'angular-notifier';
 import Chart from 'chart.js/auto'
 import { plugins } from 'chartist';
-import { throwError } from 'rxjs';
+import { interval, throwError } from 'rxjs';
 import { Observable } from 'rxjs-compat';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 
 @Component({
-	selector: 'app-dashboard',
-	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.scss']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {
 
-	private apiURL = environment.apiURL;
+  private apiURL = environment.apiURL;
 
-	private ctxMemoryUsage = 'memoryUsage';
-	
-	private ctxContainersInfo = 'containersInfo';
+  private ctxMemoryUsage = 'memoryUsage';
 
-	public memoryUsageChart: Chart | undefined;
-	
-	public containersInfoChart: Chart | undefined;
+  private ctxContainersInfo = 'containersInfo';
 
-	public dashboard: any;
+  public memoryUsageChart: Chart;
 
-	public refreshInterval = 5;
+  public containersInfoChart: Chart;
 
-	private isActive = true;
+  public dashboard: any;
 
-	constructor(private http: HttpClient,
-				private notifierService: NotifierService) { }
+  public refreshInterval = 5;
+
+  private isActive = true;
+
+  constructor(private http: HttpClient,
+    private notifierService: NotifierService) { }
 
 
-	ngAfterViewInit() {
-		this.isActive = true;
-		this.memoryUsageChart = new Chart(this.ctxMemoryUsage, {
-			type: 'line',
-			data: {
-				labels: [''],
-				datasets: [{
-					data: [0],
-					borderColor: '#63de9f',
-					fill: true,
-					backgroundColor: '#63de9491',
-					borderWidth: 2,
-				}]
-			},
-			options: {
-				scales: {
-					y: {
-						beginAtZero: true,
-					},
-				},
-				plugins: {
-					legend: {
-						display: false
-					}
-				}
-			}
-		});
+  ngAfterViewInit() {
+    this.isActive = true;
+    this.memoryUsageChart = new Chart(this.ctxMemoryUsage, {
+      type: 'line',
+      data: {
+        labels: [''],
+        datasets: [{
+          data: [0],
+          borderColor: '#63de9f',
+          fill: true,
+          backgroundColor: '#63de9491',
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
 
-		this.getDashboard()
-			.subscribe((response: any) => {
-				this.dashboard = response;
-				this.updateChart()
-			})
+    this.getDashboard()
+      .subscribe((response: any) => {
+        this.dashboard = response;
+        this.updateChart()
+      })
 
-		const refreshContainer$ = Observable.of(null)
-			.switchMap(() => this.refreshObs())
-			.map(() => {
-				if(this.isActive){
-					this.getDashboard()
-					.subscribe(
-						(response: any) => {
-							this.dashboard = response;
-							this.updateChart()
-						},
-						(error: any) => {
-							this.notifierService.notify('error', `Failed to get dashboard: ${error.message}`)
-						})
-				}
-			})
-			.repeat();
+    const refreshContainer$ = this.createInterval()
+      .pipe(switchMap((interval: number) => {
+        console.log('refresh interval = ' + interval);
 
-		refreshContainer$.subscribe(() => {
-			console.log('refresh interval = ' + this.refreshInterval);
-		});
+        return this.getDashboard()
+      }));
 
-	}
+    refreshContainer$.subscribe((response: any) => {
 
-	// HttpClient API get() method => Fetch dashboard
-	getDashboard(): Observable<any> {
-		return this.http.get<any>(this.apiURL + '/info/')
-			.pipe(
-				catchError((err: any) => {
-					console.log(err)
-					return throwError(err)
-				})
-			)
-	}
+      this.dashboard = response;
+      this.updateChart()
+    },
+      (error: any) => {
+        this.notifierService.notify('error', `Failed to get dashboard: ${error.message}`)
+      });
+  }
 
-	updateChart() {
+  // HttpClient API get() method => Fetch dashboard
+  getDashboard(): Observable<any> {
+    return this.http.get<any>(this.apiURL + '/info/')
+      .pipe(
+        catchError((err: any) => {
+          console.log(err)
+          return throwError(err)
+        })
+      )
+  }
 
-		this.memoryUsageChart?.data.labels?.push('')
-		this.memoryUsageChart?.data.datasets.forEach((datasets: { data: any[]; }) => {
-			
-			datasets.data.push(this.dashboard.memoryUsage)
-		})
+  updateChart() {
 
-		this.memoryUsageChart?.update()
+    this.memoryUsageChart?.data.labels?.push('')
+    this.memoryUsageChart?.data.datasets.forEach((datasets: { data: any[]; }) => {
 
-		this.containersInfoChart?.destroy()
+      datasets.data.push(this.dashboard.memoryUsage)
+    })
 
-		const backgroundColor: any[] = [];
+    this.memoryUsageChart?.update()
 
-		if(this.dashboard?.running > 0){
-			
-			backgroundColor.push('rgb(54, 162, 235)')
-		}
+    this.containersInfoChart?.destroy()
 
-		if(this.dashboard?.paused > 0){
-			
-			backgroundColor.push('rgb(255, 205, 86)')
-		}
+    const backgroundColor: any[] = [];
 
-		if(this.dashboard?.stopped > 0){
-			
-			backgroundColor.push('rgb(255, 99, 132')
-		}
+    if (this.dashboard?.running > 0) {
 
-		this.containersInfoChart = new Chart(this.ctxContainersInfo, {
-			type: 'doughnut',
-			data: {
-				labels: [],
-				datasets: [{
-					data: [],
-					backgroundColor: backgroundColor,
-				}],
+      backgroundColor.push('rgb(54, 162, 235)')
+    }
 
-			},
-			options: {
-				responsive: true,
-				plugins: {
-					legend: {
-						position: "bottom"
-					}
-				},
-				animation:false
+    if (this.dashboard?.paused > 0) {
 
-			}
+      backgroundColor.push('rgb(255, 205, 86)')
+    }
 
-		});
-		
-		if(this.dashboard?.running > 0){
-			this.containersInfoChart?.data.labels?.push('Running')	
-			this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.running)
-		}
+    if (this.dashboard?.stopped > 0) {
 
-		if(this.dashboard?.paused > 0){
-			this.containersInfoChart?.data.labels?.push('Paused')	
-			this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.paused)
-		}
-		if(this.dashboard?.stopped > 0){
-			this.containersInfoChart?.data.labels?.push('Stopped')	
-			this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.stopped)
-		}
+      backgroundColor.push('rgb(255, 99, 132')
+    }
 
-		this.containersInfoChart?.update()
-	}
+    this.containersInfoChart = new Chart(this.ctxContainersInfo, {
+      type: 'doughnut',
+      data: {
+        labels: [],
+        datasets: [{
+          data: [],
+          backgroundColor: backgroundColor,
+        }],
 
-	refreshObs() { return Observable.timer(this.refreshInterval * 1000) 
-	}
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom"
+          }
+        },
+        animation: false
 
-	localDateTime(dateNumber: string): string {
-		return new Date(dateNumber).toLocaleString()
-	  }
+      }
 
-	ngOnDestroy(): void {
-		this.isActive = false;
-	}
+    });
+
+    if (this.dashboard?.running > 0) {
+      this.containersInfoChart?.data.labels?.push('Running')
+      this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.running)
+    }
+
+    if (this.dashboard?.paused > 0) {
+      this.containersInfoChart?.data.labels?.push('Paused')
+      this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.paused)
+    }
+    if (this.dashboard?.stopped > 0) {
+      this.containersInfoChart?.data.labels?.push('Stopped')
+      this.containersInfoChart?.data.datasets[0].data.push(this.dashboard?.stopped)
+    }
+
+    this.containersInfoChart?.update()
+  }
+
+  createInterval() {
+    return interval(this.refreshInterval * 1000)
+  }
+
+  localDateTime(dateNumber: string): string {
+    return new Date(dateNumber).toLocaleString()
+  }
+
+  ngOnDestroy(): void {
+    this.isActive = false;
+  }
 
 }

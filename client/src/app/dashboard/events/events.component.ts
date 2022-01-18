@@ -16,7 +16,7 @@ export class EventsComponent implements OnInit {
               private notifierService: NotifierService) { }
 
 
-  
+
   public events: [] = [];
 
   private apiURL = environment.apiURL;
@@ -44,8 +44,7 @@ export class EventsComponent implements OnInit {
   }
 
   localDateTime(dateNumber: string): string {
-    debugger
-		return new Date(dateNumber).toLocaleString()
+    return new Date(dateNumber).toLocaleString()
 	  }
 
 }

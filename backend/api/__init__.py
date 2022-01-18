@@ -1,6 +1,8 @@
 # B"H
 import os
-import docker
+from sys import version
+import docker 
+from docker.utils import kwargs_from_env
 # Import flask and template operators
 from flask import Flask, jsonify, render_template ,send_from_directory
 from flask_socketio import SocketIO
@@ -18,7 +20,8 @@ socketio = SocketIO(app, cors_allowed_origins="*", host='0.0.0.0')
 
 # Create low-level client for the Docker Engine API.
 try:
-  docker_client = docker.APIClient(base_url='unix://var/run/docker.sock')
+  # docker_client = docker.APIClient(base_url='unix://var/run/docker.sock')
+  docker_client = docker.APIClient(version='auto', **kwargs_from_env())
 except docker.errors.DockerException as err:
     print("\x1b[31;21m {0} \x1b[0m \nCould not connect to docker api make sure docker socket is mounted.\ntry running with: -v /var/run/docker.sock:/var/run/docker.sock".format(str(err)))
     exit(4)
@@ -37,7 +40,10 @@ def not_found(error):
 def connect():
   app.logger.info('Client Connected!')
 
-
+@app.route('/hc', methods=['GET'])
+def health_check():
+    return 'alive';
+  
 # --- Import can't be on top of like (PEP 8: E402 module level import not at top of file) for some reason.
 # Register modules
 from api.mod_container.controllers import mod_container as container_module

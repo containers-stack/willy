@@ -70,7 +70,9 @@ def api_dashboard():
 
         memory_usage = 0
 
-        for container in Sdk.docker_client.containers():
+        containers = Sdk.docker_client.containers()
+        
+        for container in containers:
 
             container_mem_usade = Sdk.docker_client.stats(container=container['Id'], stream=False)
 
