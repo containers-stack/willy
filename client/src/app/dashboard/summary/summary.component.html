@@ -1,7 +1,10 @@
 <mat-grid-list cols="4" rowHeight="5:2">
     <mat-grid-tile>
-      <mat-card class="card one">
-        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+      <mat-card (click)="navigate('container')" class="card one">
+        <div *ngIf="this.inProgress" style="text-align: center;">
+          <mat-spinner diameter="50" style="margin-top: 10%; margin-left:40%;"></mat-spinner>
+        </div>
+        <mat-card-title *ngIf="!this.inProgress" style="margin-left: 20px;margin-top: 10px;">
           <div style="font-weight: bold;">{{this.systemInfo?.Containers}}</div>
           <span>Containers</span>
         </mat-card-title>
@@ -9,7 +12,10 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <mat-card class="card tow">
-        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+        <div *ngIf="this.inProgress" style="text-align: center;">
+          <mat-spinner diameter="50" style="margin-top: 10%; margin-left:40%;"></mat-spinner>
+        </div>
+        <mat-card-title *ngIf="!this.inProgress" style="margin-left: 20px;margin-top: 10px;">
           <div style="font-weight: bold;">{{this.systemInfo?.Images}}</div>
           <span>Images</span>
         </mat-card-title>
@@ -17,7 +23,10 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <mat-card class="card tree">
-        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+        <div *ngIf="this.inProgress" style="text-align: center;">
+          <mat-spinner diameter="50" style="margin-top: 10%; margin-left:40%;"></mat-spinner>
+        </div>
+        <mat-card-title *ngIf="!this.inProgress" style="margin-left: 20px;margin-top: 10px;">
           <div style="font-weight: bold;">{{this.systemInfo?.Plugins.Volume.length}}</div>
           <span>Volumes</span>
         </mat-card-title>
@@ -25,7 +34,10 @@
     </mat-grid-tile>
     <mat-grid-tile>
       <mat-card class="card four">
-        <mat-card-title style="margin-left: 20px;margin-top: 10px;">
+        <div *ngIf="this.inProgress" style="text-align: center;">
+          <mat-spinner diameter="50" style="margin-top: 10%; margin-left:40%;"></mat-spinner>
+        </div>
+        <mat-card-title *ngIf="!this.inProgress" style="margin-left: 20px;margin-top: 10px;">
           <div style="font-weight: bold;">{{this.systemInfo?.Plugins.Network.length}}</div>
           <span>Networking</span>
         </mat-card-title>

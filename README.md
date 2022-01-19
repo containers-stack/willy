@@ -1,12 +1,12 @@
 
 
 <p align="center" style="width:50%">
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/1.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/2.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/3.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/4.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/5.png' />
-  <img title="portainer" src='https://github.com/moti-malka/Willy/blob/release/v1/images/6.png' />
+  <img style="width:20%" title="willy" src='https://github.com/moti-malka/Willy/blob/release/v1/images/1.png' />
+  <img style="width:20%" title="willy" src='https://github.com/moti-malka/Willy/blob/release/v1/images/2.png' />
+  <img style="width:20%" title="willy" src='https://github.com/moti-malka/Willy/blob/release/v1/images/3.png' />
+  <img style="width:20%" title="willy" src='https://github.com/moti-malka/Willy/blob/release/v1/images/4.png' />
+  <img style="width:20%" title="willy" src='https://github.com/moti-malka/Willy/blob/release/v1/images/5.png' />
+  <img style="width:20%" title="willy" src='https://github.com/moti-malka/Willy/blob/release/v1/images/6.png' />
 </p>
 
 **Willy** is a web service that can be used to manage Docker. The application allows you to manage all your orchestrator resources (containers, images, volumes, networks and more) through a GUI.

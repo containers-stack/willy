@@ -15,7 +15,7 @@ export class ContainersPieComponent implements OnInit {
 
   private apiURL = environment.apiURL;
 
-	private ctxContainersInfo = 'containersInfo';
+	public containersInfoChart: Chart | undefined;
 
   constructor(private http: HttpClient,
               private notifierService: NotifierService) { }

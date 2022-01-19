@@ -1,4 +1,16 @@
-<div *ngIf="this.events.length == 0">
+<div *ngIf="this.inProgress">
+  <mat-card style="width: 100%;">
+    <mat-card-title style="padding: 1px 0 0 30px;">
+      <h4>
+        Containers Events
+      </h4>
+    </mat-card-title>
+    <mat-card-content style="margin-left: 10px;">
+      <mat-spinner diameter="100" style="margin-left:40%;"></mat-spinner>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div *ngIf="this.events.length == 0 && !this.inProgress">
   <mat-card style="width: 100%;">
     <mat-card-title style="padding: 1px 0 0 30px;">
       <h4>
